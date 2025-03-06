@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS Users (
     gender ENUM('Male', 'Female', 'Other'),
     height DECIMAL(5,2),
     weight DECIMAL(5,2),
+    bmi DECIMAL(5,2),
     phone_number VARCHAR(20),
     address TEXT,
     profile_picture_url VARCHAR(255),

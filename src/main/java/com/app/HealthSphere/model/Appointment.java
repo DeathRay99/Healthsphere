@@ -12,7 +12,7 @@ public class Appointment {
 
     public Appointment() {}
 
-    public Appointment(Long appointmentId,Long userId, String providerName, String appointmentType, LocalDateTime appointmentDate, String notes) {
+    public Appointment(Long userId, String providerName, String appointmentType, LocalDateTime appointmentDate, String notes) {
         this.userId = userId;
         this.providerName = providerName;
         this.appointmentType = appointmentType;

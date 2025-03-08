@@ -3,14 +3,11 @@ CREATE TABLE IF NOT EXISTS UserAuthentication (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('ADMIN', 'USER') DEFAULT 'USER',
     last_login TIMESTAMP,
     account_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE
 );
 
-
-// Ai
 CREATE TABLE IF NOT EXISTS Recommendations (
     recommendation_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
@@ -72,11 +69,6 @@ CREATE TABLE IF NOT EXISTS HealthLogs (
     log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES UserAuthentication(user_id) ON DELETE CASCADE
 );
-
-
-
-
-
 
 CREATE TABLE IF NOT EXISTS Appointments (
     appointment_id INT PRIMARY KEY AUTO_INCREMENT,

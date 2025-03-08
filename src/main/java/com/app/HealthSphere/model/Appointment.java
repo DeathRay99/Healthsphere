@@ -1,8 +1,8 @@
-package com.app.HealthSphere.models;
+package com.app.HealthSphere.model;
 
 import java.time.LocalDateTime;
 
-public class Appointments {
+public class Appointment {
     private Long appointmentId;
     private Long userId;
     private String providerName;
@@ -10,9 +10,9 @@ public class Appointments {
     private LocalDateTime appointmentDate;
     private String notes;
 
-    public Appointments() {}
+    public Appointment() {}
 
-    public Appointments(Long userId, String providerName, String appointmentType, LocalDateTime appointmentDate, String notes) {
+    public Appointment(Long userId, String providerName, String appointmentType, LocalDateTime appointmentDate, String notes) {
         this.userId = userId;
         this.providerName = providerName;
         this.appointmentType = appointmentType;

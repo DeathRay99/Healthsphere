@@ -1,8 +1,8 @@
-package com.app.HealthSphere.models;
+package com.app.HealthSphere.model;
 
 import java.time.LocalDateTime;
 
-public class HealthLogs {
+public class HealthLog {
     private Long logId;
     private Long userId;
     private String logType;
@@ -20,12 +20,13 @@ public class HealthLogs {
     private Integer heartRate;
     private LocalDateTime logDate;
 
-    public HealthLogs() {}
+    public HealthLog() {}
 
-    public HealthLogs(Long userId, String logType, String description, Integer calories, Double protein,
-                      Double carbohydrates, Double fats, Integer durationMinutes, String intensity,
-                      Double weight, Double bodyFat, Integer bloodPressureSystolic, Integer bloodPressureDiastolic,
-                      Integer heartRate) {
+    public HealthLog(Long logId,Long userId, String logType, String description, Integer calories, Double protein,
+                     Double carbohydrates, Double fats, Integer durationMinutes, String intensity,
+                     Double weight, Double bodyFat, Integer bloodPressureSystolic, Integer bloodPressureDiastolic,
+                     Integer heartRate) {
+        this.logId=logId;
         this.userId = userId;
         this.logType = logType;
         this.description = description;

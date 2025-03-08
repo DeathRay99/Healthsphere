@@ -1,4 +1,4 @@
-package com.app.HealthSphere.models;
+package com.app.HealthSphere.model;
 
 import java.time.LocalDateTime;
 

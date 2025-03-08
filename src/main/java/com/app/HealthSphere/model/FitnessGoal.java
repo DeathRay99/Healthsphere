@@ -1,8 +1,8 @@
-package com.app.HealthSphere.models;
+package com.app.HealthSphere.model;
 
 import java.util.Date;
 
-public class FitnessGoals {
+public class FitnessGoal {
     private Long goalId;
     private Long userId;
     private String goalType;
@@ -10,9 +10,10 @@ public class FitnessGoals {
     private Double targetBodyFat;
     private Date targetDate;
 
-    public FitnessGoals() {}
+    public FitnessGoal() {}
 
-    public FitnessGoals(Long userId, String goalType, Double targetWeight, Double targetBodyFat, Date targetDate) {
+    public FitnessGoal(Long goalId,Long userId, String goalType, Double targetWeight, Double targetBodyFat, Date targetDate) {
+        this.goalId=goalId;
         this.userId = userId;
         this.goalType = goalType;
         this.targetWeight = targetWeight;

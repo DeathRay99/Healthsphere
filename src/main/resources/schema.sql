@@ -14,10 +14,11 @@ CREATE TABLE IF NOT EXISTS Recommendations (
     type ENUM('Meal', 'Workout'),
     recommended_item VARCHAR(100),
     reason TEXT,
-    user_feedback ENUM('Liked', 'Disliked', 'Neutral'),
+    user_feedback ENUM('Liked', 'Disliked', 'Neutral') DEFAULT NULL,
     recommended_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES UserAuthentication(user_id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS Users (
     user_id INT PRIMARY KEY,

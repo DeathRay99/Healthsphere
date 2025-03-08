@@ -1,8 +1,8 @@
-package com.app.HealthSphere.models;
+package com.app.HealthSphere.model;
 
 import java.util.Date;
 
-public class Users {
+public class User {
     private Long userId;
     private String firstName;
     private String lastName;
@@ -20,11 +20,11 @@ public class Users {
     private String medications;
     private String dietaryPreference;
 
-    public Users() {}
+    public User() {}
 
-    public Users(Long userId, String firstName, String lastName, Date dateOfBirth, String gender, Double height, Double weight,
-                 String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions,
-                 String allergies, String medications, String dietaryPreference) {
+    public User(Long userId, String firstName, String lastName, Date dateOfBirth, String gender, Double height, Double weight,
+                String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions,
+                String allergies, String medications, String dietaryPreference) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;

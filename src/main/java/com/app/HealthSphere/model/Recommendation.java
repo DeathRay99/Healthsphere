@@ -1,8 +1,8 @@
-package com.app.HealthSphere.models;
+package com.app.HealthSphere.model;
 
 import java.time.LocalDateTime;
 
-public class Recommendations {
+public class Recommendation {
     private Long recommendationId;
     private Long userId;
     private String type;
@@ -11,9 +11,10 @@ public class Recommendations {
     private String userFeedback;
     private LocalDateTime recommendedDate;
 
-    public Recommendations() {}
+    public Recommendation() {}
 
-    public Recommendations(Long userId, String type, String recommendedItem, String reason, String userFeedback) {
+    public Recommendation(Long recommendationId,Long userId, String type, String recommendedItem, String reason, String userFeedback) {
+        this.recommendationId=recommendationId;
         this.userId = userId;
         this.type = type;
         this.recommendedItem = recommendedItem;

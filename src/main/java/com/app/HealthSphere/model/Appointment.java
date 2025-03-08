@@ -10,9 +10,11 @@ public class Appointment {
     private LocalDateTime appointmentDate;
     private String notes;
 
-    public Appointment() {}
+    public Appointment() {
+    }
 
-    public Appointment(Long userId, String providerName, String appointmentType, LocalDateTime appointmentDate, String notes) {
+    public Appointment(Long userId, String providerName, String appointmentType, LocalDateTime appointmentDate,
+            String notes) {
         this.userId = userId;
         this.providerName = providerName;
         this.appointmentType = appointmentType;
@@ -20,21 +22,52 @@ public class Appointment {
         this.notes = notes;
     }
 
-    public Long getAppointmentId() { return appointmentId; }
-    public void setAppointmentId(Long appointmentId) { this.appointmentId = appointmentId; }
+    public Long getAppointmentId() {
+        return appointmentId;
+        // gettingappointmentId
+    }
 
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public void setAppointmentId(Long appointmentId) {
+        this.appointmentId = appointmentId;
+    }
 
-    public String getProviderName() { return providerName; }
-    public void setProviderName(String providerName) { this.providerName = providerName; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public String getAppointmentType() { return appointmentType; }
-    public void setAppointmentType(String appointmentType) { this.appointmentType = appointmentType; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-    public LocalDateTime getAppointmentDate() { return appointmentDate; }
-    public void setAppointmentDate(LocalDateTime appointmentDate) { this.appointmentDate = appointmentDate; }
+    public String getProviderName() {
+        return providerName;
+    }
 
-    public String getNotes() { return notes; }
-    public void setNotes(String notes) { this.notes = notes; }
+    public void setProviderName(String providerName) {
+        this.providerName = providerName;
+    }
+
+    public String getAppointmentType() {
+        return appointmentType;
+    }
+
+    public void setAppointmentType(String appointmentType) {
+        this.appointmentType = appointmentType;
+    }
+
+    public LocalDateTime getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(LocalDateTime appointmentDate) {
+        this.appointmentDate = appointmentDate;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }

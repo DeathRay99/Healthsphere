@@ -98,12 +98,14 @@ CREATE TABLE IF NOT EXISTS DietRecommendations (
     FOREIGN KEY (goal_id) REFERENCES FitnessGoals(goal_id) ON DELETE SET NULL
 );
 
-CREATE TABLE IF NOT EXISTS Appointments (
-    appointment_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    provider_name VARCHAR(100),
-    appointment_type VARCHAR(50),
-    appointment_date DATETIME,
+CREATE TABLE IF NOT EXISTS Consultants (
+    Consultants_id INT PRIMARY KEY AUTO_INCREMENT,
+    
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    designation VARCHAR(50),
+    phone_no VARCHAR(50),
+    email VARCHAR(100),
     notes TEXT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+    
 );

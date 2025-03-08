@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -45,10 +46,37 @@ public class FitnessGoalRepository {
         return jdbcTemplate.queryForObject(sql, fitnessGoalRowMapper, goalId);
     }
 
-    // Update an existing fitness goal
-    public int update(FitnessGoal goal) {
-        String sql = "UPDATE FitnessGoals SET goal_type = ?, target_weight = ?, target_body_fat = ?, target_date = ? WHERE goal_id = ?";
-        return jdbcTemplate.update(sql, goal.getGoalType(), goal.getTargetWeight(), goal.getTargetBodyFat(), goal.getTargetDate(), goal.getGoalId());
+    public int updateFitnessGoal(Long goalId, FitnessGoal updatedGoal) {
+        StringBuilder sql = new StringBuilder("UPDATE FitnessGoals SET ");
+        List<Object> params = new ArrayList<>();
+
+        if (updatedGoal.getGoalType() != null) {
+            sql.append("goal_type = ?, ");
+            params.add(updatedGoal.getGoalType());
+        }
+        if (updatedGoal.getTargetWeight() != null) {
+            sql.append("target_weight = ?, ");
+            params.add(updatedGoal.getTargetWeight());
+        }
+        if (updatedGoal.getTargetBodyFat() != null) {
+            sql.append("target_body_fat = ?, ");
+            params.add(updatedGoal.getTargetBodyFat());
+        }
+        if (updatedGoal.getTargetDate() != null) {
+            sql.append("target_date = ?, ");
+            params.add(updatedGoal.getTargetDate());
+        }
+
+        // Remove the trailing comma and space
+        if (params.isEmpty()) {
+            return 0; // No update needed
+        }
+
+        sql.setLength(sql.length() - 2); // Trim last comma
+        sql.append(" WHERE goal_id = ?");
+        params.add(goalId);
+
+        return jdbcTemplate.update(sql.toString(), params.toArray());
     }
 
     // Delete a fitness goal by ID

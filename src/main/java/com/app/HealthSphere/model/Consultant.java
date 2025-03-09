@@ -1,7 +1,7 @@
 package com.app.HealthSphere.model;
 
-public class Appointments {
-    private int appointmentId;
+public class Consultant {
+    private int consultantsId;
     private String firstName;
     private String lastName;
     private String designation;
@@ -10,13 +10,13 @@ public class Appointments {
     private String notes;
 
     // Default constructor
-    public Appointments() {
+    public Consultant() {
     }
 
     // Parameterized constructor
-    public Appointments(int appointmentId, String firstName, String lastName, String designation, String phoneNo,
+    public Consultant(int consultantsId, String firstName, String lastName, String designation, String phoneNo,
             String email, String notes) {
-        this.appointmentId = appointmentId;
+        this.consultantsId = consultantsId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.designation = designation;
@@ -26,12 +26,14 @@ public class Appointments {
     }
 
     // Getters and Setters
-    public int getAppointmentId() {
-        return appointmentId;
+
+
+    public int getConsultantsId() {
+        return consultantsId;
     }
 
-    public void setAppointmentId(int appointmentId) {
-        this.appointmentId = appointmentId;
+    public void setConsultantsId(int consultantsId) {
+        this.consultantsId = consultantsId;
     }
 
     public String getFirstName() {

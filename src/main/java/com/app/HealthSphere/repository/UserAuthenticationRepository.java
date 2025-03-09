@@ -17,7 +17,7 @@ public class UserAuthenticationRepository {
     }
 
     // RowMapper using Lambda
-    private final RowMapper<UserAuthentication> userRowMapper = (rs, rowNum) ->
+    private final RowMapper<UserAuthentication> userAuthenticationRowMapper = (rs, rowNum) ->
             new UserAuthentication(
                     rs.getLong("user_id"),
                     rs.getString("username"),
@@ -35,7 +35,7 @@ public class UserAuthenticationRepository {
     // Find user by username
     public Optional<UserAuthentication> findByUsername(String username) {
         String sql = "SELECT * FROM UserAuthentication WHERE username = ?";
-        return jdbcTemplate.query(sql, userRowMapper, username).stream().findFirst();
+        return jdbcTemplate.query(sql, userAuthenticationRowMapper, username).stream().findFirst();
     }
 
     // Update last login time

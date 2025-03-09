@@ -2,6 +2,8 @@ package com.app.HealthSphere.service;
 
 import com.app.HealthSphere.model.UserAuthentication;
 import com.app.HealthSphere.repository.UserAuthenticationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -10,9 +12,12 @@ import java.util.Optional;
 public class UserAuthenticationService {
 
     private final UserAuthenticationRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserAuthenticationService(UserAuthenticationRepository userRepository) {
         this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     // Register a new user
@@ -21,6 +26,11 @@ public class UserAuthenticationService {
         if (existingUser.isPresent()) {
             return false; // Username already exists
         }
+
+        // Hash the password before saving
+        String hashedPassword = passwordEncoder.encode(user.getPasswordHash());
+        user.setPasswordHash(hashedPassword);
+
         return userRepository.save(user) > 0;
     }
 
@@ -29,11 +39,11 @@ public class UserAuthenticationService {
         Optional<UserAuthentication> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent()) {
             UserAuthentication user = userOptional.get();
-            return user.getPasswordHash().equals(password); // Simple string comparison
+            // Use BCrypt to verify the password
+            return passwordEncoder.matches(password, user.getPasswordHash());
         }
         return false;
     }
-
 
     // Update last login time
     public void updateLastLogin(String username) {

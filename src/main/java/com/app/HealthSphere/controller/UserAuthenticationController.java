@@ -6,7 +6,9 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -34,21 +36,29 @@ public class UserAuthenticationController {
         boolean isAuthenticated = authService.authenticate(user.getUsername(), user.getPasswordHash());
 
         if (isAuthenticated) {
-            session.setAttribute("username", user.getUsername());
-            session.setAttribute("userId", user.getUserId());
-            session.setAttribute("role", user.getRole()); // Store role in session
+            Optional<UserAuthentication> userOptional = authService.getUserByUsername(user.getUsername());
+            if (userOptional.isPresent()) {
+                UserAuthentication authenticatedUser = userOptional.get();
 
-            authService.updateLastLogin(user.getUsername());
+                session.setAttribute("username", authenticatedUser.getUsername());
+                session.setAttribute("userId", authenticatedUser.getUserId());
+                session.setAttribute("role", authenticatedUser.getRole());
 
-            return ResponseEntity.ok(Map.of(
-                    "username", user.getUsername(),
-                    "userId", user.getUserId(),
-                    "role", user.getRole()
-            ));
+                authService.updateLastLogin(authenticatedUser.getUsername());
+
+                // ✅ Use HashMap to avoid NullPointerException
+                Map<String, Object> response = new HashMap<>();
+                response.put("username", authenticatedUser.getUsername());
+                response.put("userId", authenticatedUser.getUserId());
+                response.put("role", authenticatedUser.getRole());
+
+                return ResponseEntity.ok(response);
+            }
         }
 
         return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
     }
+
 
 
     // Logout user and destroy session

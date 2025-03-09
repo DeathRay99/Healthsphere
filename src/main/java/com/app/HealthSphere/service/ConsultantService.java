@@ -2,41 +2,42 @@ package com.app.HealthSphere.service;
 
 import com.app.HealthSphere.model.Consultant;
 import com.app.HealthSphere.repository.ConsultantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ConsultantService {
+    private final ConsultantRepository consultantRepository;
 
-    private final ConsultantRepository appointmentsRepository;
-
-    public ConsultantService(ConsultantRepository appointmentsRepository) {
-        this.appointmentsRepository = appointmentsRepository;
+    @Autowired
+    public ConsultantService(ConsultantRepository consultantRepository) {
+        this.consultantRepository = consultantRepository;
     }
 
-    // Save consultant
+    // Create a new Consultant
     public int saveConsultant(Consultant consultant) {
-        return appointmentsRepository.save(consultant);
+        return consultantRepository.save(consultant);
     }
 
-    // Find all Consultant
-    public List<Consultant> findAllConsultants() {
-        return appointmentsRepository.findAll();
+    // Retrieve a Consultant by ID
+    public Consultant getConsultantById(int consultantId) {
+        return consultantRepository.findById(consultantId);
     }
 
-    // Find consultant by ID
-    public Consultant findConsultantById(int appointmentId) {
-        return appointmentsRepository.findById(appointmentId);
+    // Retrieve all Consultants
+    public List<Consultant> getAllConsultants() {
+        return consultantRepository.findAll();
     }
 
-    // Update consultant
+    // Update an existing Consultant
     public int updateConsultant(Consultant consultant) {
-        return appointmentsRepository.update(consultant);
+        return consultantRepository.update(consultant);
     }
 
-    // Delete consultant by ID
-    public int deleteConsultantById(int appointmentId) {
-        return appointmentsRepository.deleteById(appointmentId);
+    // Delete a Consultant by ID
+    public int deleteConsultant(int consultantId) {
+        return consultantRepository.delete(consultantId);
     }
 }

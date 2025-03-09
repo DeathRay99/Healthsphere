@@ -1,7 +1,7 @@
 package com.app.HealthSphere.model;
 
 public class Consultant {
-    private int consultantsId;
+    private int consultantId;
     private String firstName;
     private String lastName;
     private String designation;
@@ -10,13 +10,11 @@ public class Consultant {
     private String notes;
 
     // Default constructor
-    public Consultant() {
-    }
+    public Consultant() {}
 
     // Parameterized constructor
-    public Consultant(int consultantsId, String firstName, String lastName, String designation, String phoneNo,
-            String email, String notes) {
-        this.consultantsId = consultantsId;
+    public Consultant(int consultantId, String firstName, String lastName, String designation, String phoneNo, String email, String notes) {
+        this.consultantId = consultantId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.designation = designation;
@@ -26,14 +24,12 @@ public class Consultant {
     }
 
     // Getters and Setters
-
-
-    public int getConsultantsId() {
-        return consultantsId;
+    public int getConsultantId() {
+        return consultantId;
     }
 
-    public void setConsultantsId(int consultantsId) {
-        this.consultantsId = consultantsId;
+    public void setConsultantId(int consultantId) {
+        this.consultantId = consultantId;
     }
 
     public String getFirstName() {
@@ -83,4 +79,19 @@ public class Consultant {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    // Override toString() method for easy printing of Consultant objects
+    @Override
+    public String toString() {
+        return "Consultant{" +
+                "consultantId=" + consultantId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", designation='" + designation + '\'' +
+                ", phoneNo='" + phoneNo + '\'' +
+                ", email='" + email + '\'' +
+                ", notes='" + notes + '\'' +
+                '}';
+    }
 }
+

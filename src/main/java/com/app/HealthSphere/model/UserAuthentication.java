@@ -1,5 +1,7 @@
 package com.app.HealthSphere.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class UserAuthentication {
@@ -15,7 +17,7 @@ public class UserAuthentication {
     // Constructors
     public UserAuthentication() {}
 
-    public UserAuthentication(Long userId,String username, String email, String passwordHash, String role) {
+    public UserAuthentication(Long userId,String username, String email, String passwordHash,  @JsonProperty(defaultValue = "USER") String role) {
         this.userId=userId;
         this.username = username;
         this.email = email;

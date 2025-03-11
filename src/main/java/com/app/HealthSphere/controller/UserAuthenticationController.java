@@ -12,6 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 public class UserAuthenticationController {
 
     private final UserAuthenticationService authService;

@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS Users (
     blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'),
     medical_conditions TEXT, -- asthma, heart, knee, discomfort in any body part
     allergies TEXT,
-    workout_intensity ENUM('light', 'heavy','intermediate'),
+    medications TEXT,
+--    workout_intensity ENUM('light', 'heavy','intermediate'),
     dietary_preference ENUM('Vegetarian', 'Non-Vegetarian', 'Vegan'),
     FOREIGN KEY (user_id) REFERENCES UserAuthentication(user_id) ON DELETE CASCADE
 );

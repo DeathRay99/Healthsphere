@@ -28,7 +28,7 @@ public class UserAuthenticationRepository {
 
     // Save a new user
     public int save(UserAuthentication user) {
-        String sql = "INSERT INTO UserAuthentication (username, email, password_hash, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO UserAuthentication (username, email, password_hash, role) VALUES (?, ?, ?, COALESCE(?, 'USER'))";
         return jdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPasswordHash(), user.getRole());
     }
 

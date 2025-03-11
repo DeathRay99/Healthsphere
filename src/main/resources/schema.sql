@@ -106,6 +106,6 @@ CREATE TABLE IF NOT EXISTS Consultants (
     designation VARCHAR(50),
     phone_no VARCHAR(50),
     email VARCHAR(100),
-    notes TEXT,
+    notes TEXT
     
 );

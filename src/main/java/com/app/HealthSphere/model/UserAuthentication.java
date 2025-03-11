@@ -1,5 +1,7 @@
 package com.app.HealthSphere.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class UserAuthentication {
@@ -7,6 +9,7 @@ public class UserAuthentication {
     private String username;
     private String email;
     private String passwordHash;
+    private String role; // Added role field
     private LocalDateTime lastLogin;
     private LocalDateTime accountCreated;
     private Boolean isActive;
@@ -14,10 +17,12 @@ public class UserAuthentication {
     // Constructors
     public UserAuthentication() {}
 
-    public UserAuthentication(String username, String email, String passwordHash) {
+    public UserAuthentication(Long userId,String username, String email, String passwordHash,  @JsonProperty(defaultValue = "USER") String role) {
+        this.userId=userId;
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
+        this.role = role != null ? role : "USER"; // Default role is "USER"
         this.accountCreated = LocalDateTime.now();
         this.isActive = true;
     }
@@ -53,6 +58,14 @@ public class UserAuthentication {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public LocalDateTime getLastLogin() {

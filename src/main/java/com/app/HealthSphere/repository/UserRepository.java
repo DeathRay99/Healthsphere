@@ -1,7 +1,7 @@
 package com.app.HealthSphere.repository;
 
 import com.app.HealthSphere.model.User;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -12,10 +12,10 @@ import java.util.Map;
 @Repository
 public class UserRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public UserRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public UserRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
     // RowMapper for User
@@ -27,6 +27,7 @@ public class UserRepository {
             rs.getString("gender"),
             rs.getDouble("height"),
             rs.getDouble("weight"),
+            rs.getDouble("bmi"),
             rs.getString("phone_number"),
             rs.getString("address"),
             rs.getString("profile_picture_url"),
@@ -36,39 +37,45 @@ public class UserRepository {
             rs.getString("medications"),
             rs.getString("dietary_preference"));
 
-    // Create
-    public int save(User user) {
-        String sql = "INSERT INTO Users (first_name, last_name, date_of_birth, gender, height, weight, phone_number, address, profile_picture_url, blood_type, medical_conditions, allergies, medications, dietary_preference) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql,
-                user.getFirstName(),
-                user.getLastName(),
-                user.getDateOfBirth(),
-                user.getGender(),
-                user.getHeight(),
-                user.getWeight(),
-                user.getPhoneNumber(),
-                user.getAddress(),
-                user.getProfilePictureUrl(),
-                user.getBloodType(),
-                user.getMedicalConditions(),
-                user.getAllergies(),
-                user.getMedications(),
-                user.getDietaryPreference());
+    // Create a new user
+    public int save(Long userId, User user) {
+        String sql = "INSERT INTO Users (user_id, first_name, last_name, date_of_birth, gender, height, weight, bmi, phone_number, address, profile_picture_url, blood_type, medical_conditions, allergies, medications, dietary_preference) VALUES (:userId, :firstName, :lastName, :dateOfBirth, :gender, :height, :weight, :bmi, :phoneNumber, :address, :profilePictureUrl, :bloodType, :medicalConditions, :allergies, :medications, :dietaryPreference)";
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        params.put("firstName", user.getFirstName());
+        params.put("lastName", user.getLastName());
+        params.put("dateOfBirth", user.getDateOfBirth());
+        params.put("gender", user.getGender());
+        params.put("height", user.getHeight());
+        params.put("weight", user.getWeight());
+        params.put("bmi", user.getBmi());
+        params.put("phoneNumber", user.getPhoneNumber());
+        params.put("address", user.getAddress());
+        params.put("profilePictureUrl", user.getProfilePictureUrl());
+        params.put("bloodType", user.getBloodType());
+        params.put("medicalConditions", user.getMedicalConditions());
+        params.put("allergies", user.getAllergies());
+        params.put("medications", user.getMedications());
+        params.put("dietaryPreference", user.getDietaryPreference());
+
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 
-    // Read (Find all users)
+    // Get all users
     public List<User> findAll() {
         String sql = "SELECT * FROM Users";
-        return jdbcTemplate.query(sql, userRowMapper);
+        return namedParameterJdbcTemplate.query(sql, userRowMapper);
     }
 
-    // Read (Find by ID)
+    // Get user by ID
     public User findById(Long userId) {
-        String sql = "SELECT * FROM Users WHERE user_id = ?";
-        return jdbcTemplate.queryForObject(sql, userRowMapper, userId);
+        String sql = "SELECT * FROM Users WHERE user_id = :userId";
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        return namedParameterJdbcTemplate.queryForObject(sql, params, userRowMapper);
     }
 
-    // Update
     public int update(User user) {
         StringBuilder sql = new StringBuilder("UPDATE Users SET ");
         Map<String, Object> params = new HashMap<>();
@@ -130,18 +137,25 @@ public class UserRepository {
             params.put("dietaryPreference", user.getDietaryPreference());
         }
 
+        // If no fields were updated, return 0 (nothing changed)
+        if (params.isEmpty()) {
+            throw new IllegalArgumentException("No fields provided for update.");
+        }
+
         // Remove the last comma and space
         sql.setLength(sql.length() - 2);
 
         sql.append(" WHERE user_id = :userId");
         params.put("userId", user.getUserId());
 
-        return jdbcTemplate.update(sql.toString(), params);
+        return namedParameterJdbcTemplate.update(sql.toString(), params);
     }
 
-    // Delete
+    // Delete a user
     public int delete(Long userId) {
-        String sql = "DELETE FROM Users WHERE user_id = ?";
-        return jdbcTemplate.update(sql, userId);
+        String sql = "DELETE FROM Users WHERE user_id = :userId";
+        Map<String, Object> params = new HashMap<>();
+        params.put("userId", userId);
+        return namedParameterJdbcTemplate.update(sql, params);
     }
 }

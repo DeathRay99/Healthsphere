@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS UserAuthentication (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    role ENUM('ADMIN', 'USER') DEFAULT 'USER',
     last_login TIMESTAMP,
     account_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE
@@ -23,7 +24,8 @@ CREATE TABLE IF NOT EXISTS Users (
     blood_type ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'),
     medical_conditions TEXT, -- asthma, heart, knee, discomfort in any body part
     allergies TEXT,
-    workout_intensity ENUM('light', 'heavy','intermediate'),
+    medications TEXT,
+--    workout_intensity ENUM('light', 'heavy','intermediate'),
     dietary_preference ENUM('Vegetarian', 'Non-Vegetarian', 'Vegan'),
     FOREIGN KEY (user_id) REFERENCES UserAuthentication(user_id) ON DELETE CASCADE
 );
@@ -100,12 +102,11 @@ CREATE TABLE IF NOT EXISTS DietRecommendations (
 
 CREATE TABLE IF NOT EXISTS Consultants (
     Consultants_id INT PRIMARY KEY AUTO_INCREMENT,
-    
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     designation VARCHAR(50),
     phone_no VARCHAR(50),
     email VARCHAR(100),
     notes TEXT
-    
+
 );

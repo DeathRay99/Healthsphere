@@ -1,10 +1,14 @@
 package com.app.HealthSphere.service;
 
+import com.app.HealthSphere.exception.UserNotFoundException;
 import com.app.HealthSphere.model.User;
 import com.app.HealthSphere.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -15,28 +19,49 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    // Save user
-    public int saveUser(User user) {
-        return userRepository.save(user);
+
+    public void saveUser(Long userId, User user) {
+        try {
+            userRepository.save(userId, user);
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("User with ID " + userId + " already exists.");
+        }
     }
 
-    // Find all users
     public List<User> findAllUsers() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            throw new UserNotFoundException("No users found.");
+        }
+        return users;
     }
 
-    // Find user by ID
-    public User findUserById(Long userId) {
-        return userRepository.findById(userId);
+
+    public User findUserById(Long id) {
+        try {
+            return userRepository.findById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException("User with ID " + id + " not found");
+        }
     }
 
-    // Update user
-    public int updateUser(User user) {
-        return userRepository.update(user);
+    public void updateUser(User user) {
+        try {
+            userRepository.findById(user.getUserId());
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException("User with ID " + user.getUserId() + " not found");
+        }
+        userRepository.update(user);
     }
 
-    // Delete user
-    public int deleteUser(Long userId) {
-        return userRepository.delete(userId);
+
+    public void deleteUser(Long id) {
+        try {
+            userRepository.findById(id); // Just to check if user exists
+        } catch (EmptyResultDataAccessException e) {
+            throw new UserNotFoundException("User with ID " + id + " not found");
+        }
+        userRepository.delete(id);
     }
+
 }

@@ -1,5 +1,6 @@
 package com.app.HealthSphere.controller;
 
+import com.app.HealthSphere.exception.UserNotFoundException;
 import com.app.HealthSphere.model.User;
 import com.app.HealthSphere.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,39 +21,37 @@ public class UserController {
         this.userService = userService;
     }
 
-    // Create a new user
-    @PostMapping
-    public ResponseEntity<String> createUser(@RequestBody User user) {
-        userService.saveUser(user);
-        return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<String> createUser(@PathVariable Long userId, @RequestBody User user) {
+        userService.saveUser(userId, user);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User created successfully.");
     }
 
-    // Retrieve all users
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return ResponseEntity.ok(users);
     }
 
-    // Retrieve a user by ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         User user = userService.findUserById(id);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return ResponseEntity.ok(user);
     }
 
-    // Update a user
+    // ✅ Update a user (Handles user not found)
     @PutMapping("/{id}")
     public ResponseEntity<String> updateUser(@PathVariable Long id, @RequestBody User user) {
         user.setUserId(id);
         userService.updateUser(user);
-        return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+        return ResponseEntity.ok("User updated successfully.");
     }
 
-    // Delete a user by ID
+    // ✅ Delete a user (Handles user not found)
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        return ResponseEntity.ok("User deleted successfully.");
     }
 }

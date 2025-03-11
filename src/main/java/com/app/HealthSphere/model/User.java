@@ -23,16 +23,21 @@ public class User {
     public User() {}
 
     public User(Long userId, String firstName, String lastName, Date dateOfBirth, String gender, Double height, Double weight,
-                String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions,
+                Double bmi, String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions,
                 String allergies, String medications, String dietaryPreference) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+
+        System.out.println("Before Assignment - Height: " + height + ", Weight: " + weight);
+
         this.height = height;
         this.weight = weight;
-        this.bmi = calculateBMI(height, weight); // Automatically calculate BMI
+
+        System.out.println("After Assignment - Height: " + this.height + ", Weight: " + this.weight);
+//        this.bmi = (bmi != null) ? bmi : calculateBMI(height, weight);
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.profilePictureUrl = profilePictureUrl;
@@ -41,6 +46,8 @@ public class User {
         this.allergies = allergies;
         this.medications = medications;
         this.dietaryPreference = dietaryPreference;
+
+        updateBMI();
     }
 
     public Long getUserId() { return userId; }
@@ -78,9 +85,16 @@ public class User {
 
     private Double calculateBMI(Double height, Double weight) {
         if (height == null || weight == null || height <= 0) {
-            return null; // Avoid division by zero
+            System.out.println("BMI Calculation Skipped: Invalid height (" + height + ") or weight (" + weight + ")");
+            return null;
         }
-        return weight / (height * height);
+        double heightInMeters = height > 10 ? height / 100.0 : height;
+
+        double bmi = weight / (heightInMeters * heightInMeters);
+        System.out.println("BMI Calculated: " + bmi); // Debug log
+
+        return bmi;
+
     }
 
     public String getPhoneNumber() { return phoneNumber; }

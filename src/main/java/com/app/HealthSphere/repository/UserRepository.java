@@ -35,11 +35,12 @@ public class UserRepository {
             rs.getString("medical_conditions"),
             rs.getString("allergies"),
             rs.getString("medications"),
-            rs.getString("dietary_preference"));
+            rs.getString("dietary_preference"),
+            rs.getInt("age")); // Added age field
 
     // Create a new user
     public int save(Long userId, User user) {
-        String sql = "INSERT INTO Users (user_id, first_name, last_name, date_of_birth, gender, height, weight, bmi, phone_number, address, profile_picture_url, blood_type, medical_conditions, allergies, medications, dietary_preference) VALUES (:userId, :firstName, :lastName, :dateOfBirth, :gender, :height, :weight, :bmi, :phoneNumber, :address, :profilePictureUrl, :bloodType, :medicalConditions, :allergies, :medications, :dietaryPreference)";
+        String sql = "INSERT INTO Users (user_id, first_name, last_name, date_of_birth, gender, height, weight, bmi, phone_number, address, profile_picture_url, blood_type, medical_conditions, allergies, medications, dietary_preference, age) VALUES (:userId, :firstName, :lastName, :dateOfBirth, :gender, :height, :weight, :bmi, :phoneNumber, :address, :profilePictureUrl, :bloodType, :medicalConditions, :allergies, :medications, :dietaryPreference, :age)";
 
         Map<String, Object> params = new HashMap<>();
         params.put("userId", userId);
@@ -58,6 +59,7 @@ public class UserRepository {
         params.put("allergies", user.getAllergies());
         params.put("medications", user.getMedications());
         params.put("dietaryPreference", user.getDietaryPreference());
+        params.put("age", user.getAge()); // Added age parameter
 
         return namedParameterJdbcTemplate.update(sql, params);
     }
@@ -135,6 +137,10 @@ public class UserRepository {
         if (user.getDietaryPreference() != null) {
             sql.append("dietary_preference = :dietaryPreference, ");
             params.put("dietaryPreference", user.getDietaryPreference());
+        }
+        if (user.getAge() != null) { // Add age update condition
+            sql.append("age = :age, ");
+            params.put("age", user.getAge());
         }
 
         // If no fields were updated, return 0 (nothing changed)

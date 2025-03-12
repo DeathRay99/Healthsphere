@@ -43,17 +43,17 @@ public class DietRecommendationsRepository {
     };
 
     public List<DietRecommendations> findAll() {
-        String sql = "SELECT * FROM diet_recommendations";
+        String sql = "SELECT * FROM dietRecommendations";
         return jdbcTemplate.query(sql, dietRecommendationsRowMapper);
     }
 
     public DietRecommendations findById(int dietId) {
-        String sql = "SELECT * FROM diet_recommendations WHERE diet_id = ?";
+        String sql = "SELECT * FROM dietRecommendations WHERE diet_id = ?";
         return jdbcTemplate.queryForObject(sql, dietRecommendationsRowMapper, dietId);
     }
 
     public int save(DietRecommendations dietRecommendations) {
-        String sql = "INSERT INTO diet_recommendations (diet_name, diet_description, calories_per_day, protein_percentage, carbs_percentage, fat_percentage, meal_frequency, hydration_recommendation, foods_to_include, foods_to_avoid, supplements_recommended, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO dietRecommendations (diet_name, diet_description, calories_per_day, protein_percentage, carbs_percentage, fat_percentage, meal_frequency, hydration_recommendation, foods_to_include, foods_to_avoid, supplements_recommended, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
                 dietRecommendations.getDietName(),
                 dietRecommendations.getDietDescription(),
@@ -71,7 +71,7 @@ public class DietRecommendationsRepository {
     }
 
     public int update(DietRecommendations dietRecommendations) {
-        StringBuilder sql = new StringBuilder("UPDATE diet_recommendations SET ");
+        StringBuilder sql = new StringBuilder("UPDATE dietRecommendations SET ");
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         if (dietRecommendations.getDietName() != null) {
@@ -139,7 +139,7 @@ public class DietRecommendationsRepository {
     }
 
     public int deleteById(int dietId) {
-        String sql = "DELETE FROM diet_recommendations WHERE diet_id = ?";
+        String sql = "DELETE FROM dietRecommendations WHERE diet_id = ?";
         return jdbcTemplate.update(sql, dietId);
     }
 }

@@ -34,11 +34,13 @@ public class HealthLogRepository {
             rs.getDouble("body_fat"),
             rs.getInt("blood_pressure_systolic"),
             rs.getInt("blood_pressure_diastolic"),
-            rs.getInt("heart_rate"));
+            rs.getInt("heart_rate"),
+            rs.getInt("sleep"), // Added sleep field
+            rs.getInt("water_intake")); // Added water_intake field
 
     // Create
     public int save(HealthLog healthLog) {
-        String sql = "INSERT INTO HealthLogs (user_id, log_type, description, calories, protein, carbohydrates, fats, duration_minutes, intensity, weight, body_fat, blood_pressure_systolic, blood_pressure_diastolic, heart_rate, log_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO HealthLogs (user_id, log_type, description, calories, protein, carbohydrates, fats, duration_minutes, intensity, weight, body_fat, blood_pressure_systolic, blood_pressure_diastolic, heart_rate, log_date, sleep, water_intake) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
                 healthLog.getUserId(),
                 healthLog.getLogType(),
@@ -54,7 +56,9 @@ public class HealthLogRepository {
                 healthLog.getBloodPressureSystolic(),
                 healthLog.getBloodPressureDiastolic(),
                 healthLog.getHeartRate(),
-                healthLog.getLogDate());
+                healthLog.getLogDate(),
+                healthLog.getSleep(), // Added sleep parameter
+                healthLog.getWaterIntake()); // Added water_intake parameter
     }
 
     // Read (Find all logs)
@@ -75,65 +79,74 @@ public class HealthLogRepository {
         Map<String, Object> params = new HashMap<>();
 
         if (healthLog.getLogType() != null) {
-            sql.append("log_type = :logType, ");
+            sql.append("log_type = ?, ");
             params.put("logType", healthLog.getLogType());
         }
         if (healthLog.getDescription() != null) {
-            sql.append("description = :description, ");
+            sql.append("description = ?, ");
             params.put("description", healthLog.getDescription());
         }
         if (healthLog.getCalories() != null) {
-            sql.append("calories = :calories, ");
+            sql.append("calories = ?, ");
             params.put("calories", healthLog.getCalories());
         }
         if (healthLog.getProtein() != null) {
-            sql.append("protein = :protein, ");
+            sql.append("protein = ?, ");
             params.put("protein", healthLog.getProtein());
         }
         if (healthLog.getCarbohydrates() != null) {
-            sql.append("carbohydrates = :carbohydrates, ");
+            sql.append("carbohydrates = ?, ");
             params.put("carbohydrates", healthLog.getCarbohydrates());
         }
         if (healthLog.getFats() != null) {
-            sql.append("fats = :fats, ");
+            sql.append("fats = ?, ");
             params.put("fats", healthLog.getFats());
         }
         if (healthLog.getDurationMinutes() != null) {
-            sql.append("duration_minutes = :durationMinutes, ");
+            sql.append("duration_minutes = ?, ");
             params.put("durationMinutes", healthLog.getDurationMinutes());
         }
         if (healthLog.getIntensity() != null) {
-            sql.append("intensity = :intensity, ");
+            sql.append("intensity = ?, ");
             params.put("intensity", healthLog.getIntensity());
         }
         if (healthLog.getWeight() != null) {
-            sql.append("weight = :weight, ");
+            sql.append("weight = ?, ");
             params.put("weight", healthLog.getWeight());
         }
         if (healthLog.getBodyFat() != null) {
-            sql.append("body_fat = :bodyFat, ");
+            sql.append("body_fat = ?, ");
             params.put("bodyFat", healthLog.getBodyFat());
         }
         if (healthLog.getBloodPressureSystolic() != null) {
-            sql.append("blood_pressure_systolic = :bloodPressureSystolic, ");
+            sql.append("blood_pressure_systolic = ?, ");
             params.put("bloodPressureSystolic", healthLog.getBloodPressureSystolic());
         }
         if (healthLog.getBloodPressureDiastolic() != null) {
-            sql.append("blood_pressure_diastolic = :bloodPressureDiastolic, ");
+            sql.append("blood_pressure_diastolic = ?, ");
             params.put("bloodPressureDiastolic", healthLog.getBloodPressureDiastolic());
         }
         if (healthLog.getHeartRate() != null) {
-            sql.append("heart_rate = :heartRate, ");
+            sql.append("heart_rate = ?, ");
             params.put("heartRate", healthLog.getHeartRate());
+        }
+        if (healthLog.getSleep() != null) { // Add sleep update condition
+            sql.append("sleep = ?, ");
+            params.put("sleep", healthLog.getSleep());
+        }
+        if (healthLog.getWaterIntake() != null) { // Add water_intake update condition
+            sql.append("water_intake = ?, ");
+            params.put("waterIntake", healthLog.getWaterIntake());
         }
 
         // Remove the last comma and space
         sql.setLength(sql.length() - 2);
 
-        sql.append(" WHERE log_id = :logId");
+        sql.append(" WHERE log_id = ?");
         params.put("logId", healthLog.getLogId());
 
-        return jdbcTemplate.update(sql.toString(), params);
+        return jdbcTemplate.update(sql.toString(),
+                params.values().toArray());
     }
 
     // Delete

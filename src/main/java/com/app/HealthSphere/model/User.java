@@ -1,6 +1,7 @@
 package com.app.HealthSphere.model;
 
 import java.util.Date;
+import java.util.Calendar;
 
 public class User {
     private Long userId;
@@ -19,6 +20,7 @@ public class User {
     private String allergies;
     private String medications;
     private String dietaryPreference;
+    private Integer age;
 
     public User() {}
 
@@ -48,6 +50,12 @@ public class User {
         this.dietaryPreference = dietaryPreference;
 
         updateBMI();
+        calculateAge(); // Calculate age based on the date of birth
+    }
+
+
+
+    public User(long userId, String firstName, String lastName, java.sql.Date dateOfBirth, String gender, double height, double weight, double bmi, String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions, String allergies, String medications, String dietaryPreference, int age) {
     }
 
     public Long getUserId() { return userId; }
@@ -60,7 +68,10 @@ public class User {
     public void setLastName(String lastName) { this.lastName = lastName; }
 
     public Date getDateOfBirth() { return dateOfBirth; }
-    public void setDateOfBirth(Date dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+        calculateAge(); // Recalculate age when date of birth changes
+    }
 
     public String getGender() { return gender; }
     public void setGender(String gender) { this.gender = gender; }
@@ -94,7 +105,6 @@ public class User {
         System.out.println("BMI Calculated: " + bmi); // Debug log
 
         return bmi;
-
     }
 
     public String getPhoneNumber() { return phoneNumber; }
@@ -121,5 +131,26 @@ public class User {
     public String getDietaryPreference() { return dietaryPreference; }
     public void setDietaryPreference(String dietaryPreference) { this.dietaryPreference = dietaryPreference; }
 
+    public Integer getAge() { return age; }
 
+    private void calculateAge() {
+        if (this.dateOfBirth == null) {
+            this.age = null;
+            return;
+        }
+
+        Calendar dob = Calendar.getInstance();
+        dob.setTime(this.dateOfBirth);
+        Calendar today = Calendar.getInstance();
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.MONTH) < dob.get(Calendar.MONTH) ||
+                (today.get(Calendar.MONTH) == dob.get(Calendar.MONTH) && today.get(Calendar.DAY_OF_MONTH) < dob.get(Calendar.DAY_OF_MONTH))) {
+            age--;
+        }
+
+        this.age = age;
+        System.out.println("Age Calculated: " + age); // Debug log
+    }
 }

@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS Users (
     medications TEXT,
 --    workout_intensity ENUM('light', 'heavy','intermediate'),
     dietary_preference ENUM('Vegetarian', 'Non-Vegetarian', 'Vegan'),
+    age INT,
     FOREIGN KEY (user_id) REFERENCES UserAuthentication(user_id) ON DELETE CASCADE
 );
 
@@ -57,6 +58,8 @@ CREATE TABLE IF NOT EXISTS HealthLogs (
     blood_pressure_diastolic INT,
     heart_rate INT,
     log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    sleep INT,
+    water_intake INT,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 

@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -18,7 +17,6 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
 
     public void saveUser(Long userId, User user) {
         try {
@@ -35,7 +33,6 @@ public class UserService {
         }
         return users;
     }
-
 
     public User findUserById(Long id) {
         try {
@@ -54,7 +51,6 @@ public class UserService {
         userRepository.update(user);
     }
 
-
     public void deleteUser(Long id) {
         try {
             userRepository.findById(id); // Just to check if user exists
@@ -63,5 +59,4 @@ public class UserService {
         }
         userRepository.delete(id);
     }
-
 }

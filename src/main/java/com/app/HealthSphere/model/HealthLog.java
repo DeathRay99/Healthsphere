@@ -19,14 +19,16 @@ public class HealthLog {
     private Integer bloodPressureDiastolic;
     private Integer heartRate;
     private LocalDateTime logDate;
+    private Integer sleep; // Added sleep field
+    private Integer waterIntake; // Added water_intake field
 
     public HealthLog() {}
 
-    public HealthLog(Long logId,Long userId, String logType, String description, Integer calories, Double protein,
+    public HealthLog(Long logId, Long userId, String logType, String description, Integer calories, Double protein,
                      Double carbohydrates, Double fats, Integer durationMinutes, String intensity,
                      Double weight, Double bodyFat, Integer bloodPressureSystolic, Integer bloodPressureDiastolic,
-                     Integer heartRate) {
-        this.logId=logId;
+                     Integer heartRate, Integer sleep, Integer waterIntake) {
+        this.logId = logId;
         this.userId = userId;
         this.logType = logType;
         this.description = description;
@@ -42,6 +44,8 @@ public class HealthLog {
         this.bloodPressureDiastolic = bloodPressureDiastolic;
         this.heartRate = heartRate;
         this.logDate = LocalDateTime.now();
+        this.sleep = sleep != null ? sleep : 0;
+        this.waterIntake = waterIntake != null ? waterIntake : 0;
     }
 
     public Long getLogId() { return logId; }
@@ -91,4 +95,10 @@ public class HealthLog {
 
     public LocalDateTime getLogDate() { return logDate; }
     public void setLogDate(LocalDateTime logDate) { this.logDate = logDate; }
+
+    public Integer getSleep() { return sleep; }
+    public void setSleep(Integer sleep) { this.sleep = sleep; }
+
+    public Integer getWaterIntake() { return waterIntake; }
+    public void setWaterIntake(Integer waterIntake) { this.waterIntake = waterIntake; }
 }

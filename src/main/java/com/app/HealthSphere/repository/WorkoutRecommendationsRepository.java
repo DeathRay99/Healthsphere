@@ -40,17 +40,17 @@ public class WorkoutRecommendationsRepository {
     };
 
     public List<WorkoutRecommendations> findAll() {
-        String sql = "SELECT * FROM workout_recommendations";
+        String sql = "SELECT * FROM workoutRecommendations";
         return jdbcTemplate.query(sql, workoutRecommendationsRowMapper);
     }
 
     public WorkoutRecommendations findById(int workoutId) {
-        String sql = "SELECT * FROM workout_recommendations WHERE workout_id = ?";
+        String sql = "SELECT * FROM workoutRecommendations WHERE workout_id = ?";
         return jdbcTemplate.queryForObject(sql, workoutRecommendationsRowMapper, workoutId);
     }
 
     public int save(WorkoutRecommendations workoutRecommendations) {
-        String sql = "INSERT INTO workout_recommendations (workout_name, workout_description, exercise_type, duration_minutes, calories_burned, difficulty_level, frequency_per_week, equipment_needed, video_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO workoutRecommendations (workout_name, workout_description, exercise_type, duration_minutes, calories_burned, difficulty_level, frequency_per_week, equipment_needed, video_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         return jdbcTemplate.update(sql,
                 workoutRecommendations.getWorkoutName(),
                 workoutRecommendations.getWorkoutDescription(),
@@ -66,7 +66,7 @@ public class WorkoutRecommendationsRepository {
     }
 
     public int update(WorkoutRecommendations workoutRecommendations) {
-        StringBuilder sql = new StringBuilder("UPDATE workout_recommendations SET ");
+        StringBuilder sql = new StringBuilder("UPDATE workoutRecommendations SET ");
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         if (workoutRecommendations.getWorkoutName() != null) {
@@ -126,7 +126,7 @@ public class WorkoutRecommendationsRepository {
     }
 
     public int deleteById(int workoutId) {
-        String sql = "DELETE FROM workout_recommendations WHERE workout_id = ?";
+        String sql = "DELETE FROM workoutRecommendations WHERE workout_id = ?";
         return jdbcTemplate.update(sql, workoutId);
     }
 }

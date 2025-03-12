@@ -21,11 +21,7 @@ public class UserService {
 
 
     public void saveUser(Long userId, User user) {
-        try {
             userRepository.save(userId, user);
-        } catch (DataIntegrityViolationException e) {
-            throw new IllegalArgumentException("User with ID " + userId + " already exists.");
-        }
     }
 
     public List<User> findAllUsers() {

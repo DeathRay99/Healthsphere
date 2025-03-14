@@ -1,6 +1,7 @@
 package com.app.HealthSphere.controller;
 
 import com.app.HealthSphere.model.DietRecommendations;
+import com.app.HealthSphere.model.WorkoutRecommendations;
 import com.app.HealthSphere.service.DietRecommendationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,25 @@ public class DietRecommendationsController {
         dietRecommendationsService.saveDietRecommendation(dietRecommendations);
         return new ResponseEntity<>("Diet recommendation created successfully", HttpStatus.CREATED);
     }
+
+//    @PostMapping("/generate")
+//    public ResponseEntity<DietRecommendations> generateDietRecommendation(
+//            @RequestParam int userId,
+//            @RequestParam int goalId) {
+//
+//        DietRecommendations generatedDiets = dietRecommendationsService.generateDietRecommendation(userId, goalId);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(generatedDiets);
+//    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<List<DietRecommendations>> generateDietRecommendation(
+            @RequestParam int userId,
+            @RequestParam int goalId) {
+
+        List<DietRecommendations> generatedDiets = dietRecommendationsService.generateDietRecommendations(userId, goalId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(generatedDiets);
+    }
+
 
     // Retrieve all diet recommendations
     @GetMapping

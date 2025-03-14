@@ -92,8 +92,8 @@ CREATE TABLE IF NOT EXISTS DietRecommendations (
     protein_percentage DECIMAL(4,2),
     carbs_percentage DECIMAL(4,2),
     fat_percentage DECIMAL(4,2),
-    meal_frequency INT, -- Number of meals per day
-    hydration_recommendation TEXT, -- Water intake recommendation
+    meal_type ENUM('breakfast', 'lunch', 'dinner'),
+    hydration_recommendation TEXT,
     foods_to_include TEXT,
     foods_to_avoid TEXT,
     supplements_recommended TEXT,
@@ -102,6 +102,7 @@ CREATE TABLE IF NOT EXISTS DietRecommendations (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (goal_id) REFERENCES FitnessGoals(goal_id) ON DELETE SET NULL
 );
+
 
 CREATE TABLE IF NOT EXISTS Consultants (
     Consultants_id INT PRIMARY KEY AUTO_INCREMENT,

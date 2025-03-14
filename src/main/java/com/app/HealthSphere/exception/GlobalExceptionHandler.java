@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred. Please contact support if the issue persists.");
+                .body("An unexpected error occurred. Please contact support if the issue persists. "+ ex.getMessage());
     }
 
     @ExceptionHandler(UserNotFoundException.class)

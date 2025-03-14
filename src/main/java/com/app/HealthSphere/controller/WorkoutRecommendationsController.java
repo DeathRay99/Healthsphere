@@ -1,5 +1,6 @@
 package com.app.HealthSphere.controller;
 
+import com.app.HealthSphere.model.DietRecommendations;
 import com.app.HealthSphere.model.WorkoutRecommendations;
 import com.app.HealthSphere.service.WorkoutRecommendationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,25 @@ public class WorkoutRecommendationsController {
         workoutRecommendationsService.saveWorkoutRecommendation(workoutRecommendations);
         return new ResponseEntity<>("Workout recommendation created successfully", HttpStatus.CREATED);
     }
+
+//    @PostMapping("/generate")
+//    public ResponseEntity<WorkoutRecommendations> generateWorkoutRecommendation(
+//            @RequestParam int userId,
+//            @RequestParam int goalId) {
+//
+//            WorkoutRecommendations generatedWorkout = workoutRecommendationsService.generateWorkoutRecommendation(userId, goalId);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(generatedWorkout);
+//    }
+
+    @PostMapping("/generate")
+    public ResponseEntity<List<WorkoutRecommendations>> generateWorkputRecommendation(
+            @RequestParam int userId,
+            @RequestParam int goalId) {
+
+        List<WorkoutRecommendations> generatedWorkouts = workoutRecommendationsService.generateMultipleWorkoutRecommendations(userId, goalId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(generatedWorkouts);
+    }
+
 
     // Retrieve all workout recommendations
     @GetMapping

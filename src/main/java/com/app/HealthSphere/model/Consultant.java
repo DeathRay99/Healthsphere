@@ -12,23 +12,26 @@ public class Consultant {
     // Default constructor
     public Consultant() {}
 
-    // Parameterized constructor
+    // Parameterized constructor with validation
     public Consultant(int consultantId, String firstName, String lastName, String designation, String phoneNo, String email, String notes) {
-        this.consultantId = consultantId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.designation = designation;
-        this.phoneNo = phoneNo;
-        this.email = email;
-        this.notes = notes;
+        setConsultantId(consultantId);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setDesignation(designation);
+        setPhoneNo(phoneNo);
+        setEmail(email);
+        this.notes = notes; // Notes is optional, no validation required
     }
 
-    // Getters and Setters
+    // Getters and Setters with Validation
     public int getConsultantId() {
         return consultantId;
     }
 
     public void setConsultantId(int consultantId) {
+        if (consultantId <= 0) {
+            throw new IllegalArgumentException("Consultant ID must be a positive integer.");
+        }
         this.consultantId = consultantId;
     }
 
@@ -37,6 +40,9 @@ public class Consultant {
     }
 
     public void setFirstName(String firstName) {
+        if (firstName == null || firstName.trim().isEmpty()) {
+            throw new IllegalArgumentException("First name cannot be null or empty.");
+        }
         this.firstName = firstName;
     }
 
@@ -45,6 +51,9 @@ public class Consultant {
     }
 
     public void setLastName(String lastName) {
+        if (lastName == null || lastName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name cannot be null or empty.");
+        }
         this.lastName = lastName;
     }
 
@@ -53,6 +62,9 @@ public class Consultant {
     }
 
     public void setDesignation(String designation) {
+        if (designation == null || designation.trim().isEmpty()) {
+            throw new IllegalArgumentException("Designation cannot be null or empty.");
+        }
         this.designation = designation;
     }
 
@@ -61,6 +73,9 @@ public class Consultant {
     }
 
     public void setPhoneNo(String phoneNo) {
+        if (phoneNo == null || !phoneNo.matches("\\d{10}")) {
+            throw new IllegalArgumentException("Phone number must be a 10-digit numeric value.");
+        }
         this.phoneNo = phoneNo;
     }
 
@@ -69,6 +84,9 @@ public class Consultant {
     }
 
     public void setEmail(String email) {
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            throw new IllegalArgumentException("Invalid email address format.");
+        }
         this.email = email;
     }
 
@@ -77,10 +95,11 @@ public class Consultant {
     }
 
     public void setNotes(String notes) {
+        // Notes is optional, so no validation is required
         this.notes = notes;
     }
 
-    // Override toString() method for easy printing of Consultant objects
+    // Debugging Utility: toString() Override
     @Override
     public String toString() {
         return "Consultant{" +
@@ -93,5 +112,14 @@ public class Consultant {
                 ", notes='" + notes + '\'' +
                 '}';
     }
-}
 
+    // Validation of all fields (optional, for bulk updates or reconstruction)
+    private void validateFields() {
+        setConsultantId(consultantId);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setDesignation(designation);
+        setPhoneNo(phoneNo);
+        setEmail(email);
+    }
+}

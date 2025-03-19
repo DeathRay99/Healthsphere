@@ -5,13 +5,15 @@ import java.sql.Timestamp;
 
 public class DietRecommendations {
     private int dietId;
+    private int userId;
+    private int goalId;
     private String dietName;
     private String dietDescription;
     private int caloriesPerDay;
     private BigDecimal proteinPercentage;
     private BigDecimal carbsPercentage;
     private BigDecimal fatPercentage;
-    private int mealFrequency;
+    private String mealType;
     private String hydrationRecommendation;
     private String foodsToInclude;
     private String foodsToAvoid;
@@ -24,18 +26,21 @@ public class DietRecommendations {
     }
 
     // Parameterized constructor
-    public DietRecommendations(int dietId, String dietName, String dietDescription, int caloriesPerDay,
-            BigDecimal proteinPercentage, BigDecimal carbsPercentage, BigDecimal fatPercentage, int mealFrequency,
-            String hydrationRecommendation, String foodsToInclude, String foodsToAvoid, String supplementsRecommended,
-            Timestamp createdAt, Timestamp updatedAt) {
+    public DietRecommendations(int dietId, int userId, int goalId, String dietName, String dietDescription,
+                               int caloriesPerDay, BigDecimal proteinPercentage, BigDecimal carbsPercentage,
+                               BigDecimal fatPercentage, String mealType, String hydrationRecommendation,
+                               String foodsToInclude, String foodsToAvoid, String supplementsRecommended,
+                               Timestamp createdAt, Timestamp updatedAt) {
         this.dietId = dietId;
+        this.userId = userId;
+        this.goalId = goalId;
         this.dietName = dietName;
         this.dietDescription = dietDescription;
         this.caloriesPerDay = caloriesPerDay;
         this.proteinPercentage = proteinPercentage;
         this.carbsPercentage = carbsPercentage;
         this.fatPercentage = fatPercentage;
-        this.mealFrequency = mealFrequency;
+        this.mealType = mealType;
         this.hydrationRecommendation = hydrationRecommendation;
         this.foodsToInclude = foodsToInclude;
         this.foodsToAvoid = foodsToAvoid;
@@ -51,6 +56,22 @@ public class DietRecommendations {
 
     public void setDietId(int dietId) {
         this.dietId = dietId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getGoalId() {
+        return goalId;
+    }
+
+    public void setGoalId(int goalId) {
+        this.goalId = goalId;
     }
 
     public String getDietName() {
@@ -101,12 +122,12 @@ public class DietRecommendations {
         this.fatPercentage = fatPercentage;
     }
 
-    public int getMealFrequency() {
-        return mealFrequency;
+    public String getMealType() {
+        return mealType;
     }
 
-    public void setMealFrequency(int mealFrequency) {
-        this.mealFrequency = mealFrequency;
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
     }
 
     public String getHydrationRecommendation() {

@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 public class WorkoutRecommendations {
     private int workoutId;
+    private int userId;
+    private Integer goalId;
     private String workoutName;
     private String workoutDescription;
     private String exerciseType;
@@ -21,10 +23,13 @@ public class WorkoutRecommendations {
     }
 
     // Parameterized constructor
-    public WorkoutRecommendations(int workoutId, String workoutName, String workoutDescription, String exerciseType,
-            int durationMinutes, int caloriesBurned, String difficultyLevel, int frequencyPerWeek,
-            String equipmentNeeded, String videoUrl, Timestamp createdAt, Timestamp updatedAt) {
+    public WorkoutRecommendations(int workoutId, int userId, Integer goalId, String workoutName,
+                                  String workoutDescription, String exerciseType, int durationMinutes,
+                                  int caloriesBurned, String difficultyLevel, int frequencyPerWeek,
+                                  String equipmentNeeded, String videoUrl, Timestamp createdAt, Timestamp updatedAt) {
         this.workoutId = workoutId;
+        this.userId = userId;
+        this.goalId = goalId;
         this.workoutName = workoutName;
         this.workoutDescription = workoutDescription;
         this.exerciseType = exerciseType;
@@ -45,6 +50,22 @@ public class WorkoutRecommendations {
 
     public void setWorkoutId(int workoutId) {
         this.workoutId = workoutId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public Integer getGoalId() {
+        return goalId;
+    }
+
+    public void setGoalId(Integer goalId) {
+        this.goalId = goalId;
     }
 
     public String getWorkoutName() {

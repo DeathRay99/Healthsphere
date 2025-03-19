@@ -38,6 +38,12 @@ public class UserAuthenticationRepository {
         return jdbcTemplate.query(sql, userAuthenticationRowMapper, username).stream().findFirst();
     }
 
+    public Optional<UserAuthentication> findByEmail(String email) {
+        String sql = "SELECT * FROM UserAuthentication WHERE email = ?";
+        return jdbcTemplate.query(sql, userAuthenticationRowMapper, email).stream().findFirst();
+    }
+
+
     // Update last login time
     public int updateLastLogin(String username) {
         String sql = "UPDATE UserAuthentication SET last_login = CURRENT_TIMESTAMP WHERE username = ?";

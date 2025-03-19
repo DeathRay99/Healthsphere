@@ -50,6 +50,11 @@ public class UserAuthenticationService {
         return userRepository.findByUsername(username);
     }
 
+    public Optional<UserAuthentication> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+
     // Update last login time
     public void updateLastLogin(String username) {
         userRepository.updateLastLogin(username);

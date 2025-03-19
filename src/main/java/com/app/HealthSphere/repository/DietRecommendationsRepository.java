@@ -8,138 +8,133 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 @Repository
 public class DietRecommendationsRepository {
-
     private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
     public DietRecommendationsRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.namedJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     }
 
-    private final RowMapper<DietRecommendations> dietRecommendationsRowMapper = new RowMapper<DietRecommendations>() {
-        @Override
-        public DietRecommendations mapRow(ResultSet rs, int rowNum) throws SQLException {
-            DietRecommendations dietRecommendation = new DietRecommendations();
-            dietRecommendation.setDietId(rs.getInt("diet_id"));
-            dietRecommendation.setDietName(rs.getString("diet_name"));
-            dietRecommendation.setDietDescription(rs.getString("diet_description"));
-            dietRecommendation.setCaloriesPerDay(rs.getInt("calories_per_day"));
-            dietRecommendation.setProteinPercentage(rs.getBigDecimal("protein_percentage"));
-            dietRecommendation.setCarbsPercentage(rs.getBigDecimal("carbs_percentage"));
-            dietRecommendation.setFatPercentage(rs.getBigDecimal("fat_percentage"));
-            dietRecommendation.setMealFrequency(rs.getInt("meal_frequency"));
-            dietRecommendation.setHydrationRecommendation(rs.getString("hydration_recommendation"));
-            dietRecommendation.setFoodsToInclude(rs.getString("foods_to_include"));
-            dietRecommendation.setFoodsToAvoid(rs.getString("foods_to_avoid"));
-            dietRecommendation.setSupplementsRecommended(rs.getString("supplements_recommended"));
-            dietRecommendation.setCreatedAt(rs.getTimestamp("created_at"));
-            dietRecommendation.setUpdatedAt(rs.getTimestamp("updated_at"));
-            return dietRecommendation;
-        }
-    };
+    private final RowMapper<DietRecommendations> rowMapper = (ResultSet rs, int rowNum) ->
+            new DietRecommendations(
+                    rs.getInt("diet_id"),
+                    rs.getInt("user_id"),
+                    rs.getInt("goal_id"),
+                    rs.getString("diet_name"),
+                    rs.getString("diet_description"),
+                    rs.getInt("calories_per_day"),
+                    rs.getBigDecimal("protein_percentage"),
+                    rs.getBigDecimal("carbs_percentage"),
+                    rs.getBigDecimal("fat_percentage"),
+                    rs.getString("meal_type"),
+                    rs.getString("hydration_recommendation"),
+                    rs.getString("foods_to_include"),
+                    rs.getString("foods_to_avoid"),
+                    rs.getString("supplements_recommended"),
+                    rs.getTimestamp("created_at"),
+                    rs.getTimestamp("updated_at")
+            );
 
     public List<DietRecommendations> findAll() {
-        String sql = "SELECT * FROM dietRecommendations";
-        return jdbcTemplate.query(sql, dietRecommendationsRowMapper);
+        String sql = "SELECT * FROM dietrecommendations";
+        return jdbcTemplate.query(sql, rowMapper);
     }
 
     public DietRecommendations findById(int dietId) {
-        String sql = "SELECT * FROM dietRecommendations WHERE diet_id = ?";
-        return jdbcTemplate.queryForObject(sql, dietRecommendationsRowMapper, dietId);
+        String sql = "SELECT * FROM dietrecommendations WHERE diet_id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, dietId);
     }
 
-    public int save(DietRecommendations dietRecommendations) {
-        String sql = "INSERT INTO dietRecommendations (diet_name, diet_description, calories_per_day, protein_percentage, carbs_percentage, fat_percentage, meal_frequency, hydration_recommendation, foods_to_include, foods_to_avoid, supplements_recommended, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public int save(DietRecommendations diet) {
+        String sql = "INSERT INTO dietrecommendations " +
+                "(user_id, goal_id, diet_name, diet_description, calories_per_day, protein_percentage, carbs_percentage, " +
+                "fat_percentage, meal_type, hydration_recommendation, foods_to_include, foods_to_avoid, supplements_recommended) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         return jdbcTemplate.update(sql,
-                dietRecommendations.getDietName(),
-                dietRecommendations.getDietDescription(),
-                dietRecommendations.getCaloriesPerDay(),
-                dietRecommendations.getProteinPercentage(),
-                dietRecommendations.getCarbsPercentage(),
-                dietRecommendations.getFatPercentage(),
-                dietRecommendations.getMealFrequency(),
-                dietRecommendations.getHydrationRecommendation(),
-                dietRecommendations.getFoodsToInclude(),
-                dietRecommendations.getFoodsToAvoid(),
-                dietRecommendations.getSupplementsRecommended(),
-                dietRecommendations.getCreatedAt(),
-                dietRecommendations.getUpdatedAt());
+                diet.getUserId(),
+                diet.getGoalId(),
+                diet.getDietName(),
+                diet.getDietDescription(),
+                diet.getCaloriesPerDay(),
+                diet.getProteinPercentage(),
+                diet.getCarbsPercentage(),
+                diet.getFatPercentage(),
+                diet.getMealType(),
+                diet.getHydrationRecommendation(),
+                diet.getFoodsToInclude(),
+                diet.getFoodsToAvoid(),
+                diet.getSupplementsRecommended()
+        );
     }
 
-    public int update(DietRecommendations dietRecommendations) {
-        StringBuilder sql = new StringBuilder("UPDATE dietRecommendations SET ");
+    public int update(DietRecommendations diet) {
+        StringBuilder sql = new StringBuilder("UPDATE dietrecommendations SET ");
         MapSqlParameterSource params = new MapSqlParameterSource();
 
-        if (dietRecommendations.getDietName() != null) {
+        if (diet.getDietName() != null) {
             sql.append("diet_name = :dietName, ");
-            params.addValue("dietName", dietRecommendations.getDietName());
+            params.addValue("dietName", diet.getDietName());
         }
-        if (dietRecommendations.getDietDescription() != null) {
+        if (diet.getDietDescription() != null) {
             sql.append("diet_description = :dietDescription, ");
-            params.addValue("dietDescription", dietRecommendations.getDietDescription());
+            params.addValue("dietDescription", diet.getDietDescription());
         }
-        if (dietRecommendations.getCaloriesPerDay() != 0) {
+        if (diet.getCaloriesPerDay() != 0) {
             sql.append("calories_per_day = :caloriesPerDay, ");
-            params.addValue("caloriesPerDay", dietRecommendations.getCaloriesPerDay());
+            params.addValue("caloriesPerDay", diet.getCaloriesPerDay());
         }
-        if (dietRecommendations.getProteinPercentage() != null) {
+        if (diet.getProteinPercentage() != null) {
             sql.append("protein_percentage = :proteinPercentage, ");
-            params.addValue("proteinPercentage", dietRecommendations.getProteinPercentage());
+            params.addValue("proteinPercentage", diet.getProteinPercentage());
         }
-        if (dietRecommendations.getCarbsPercentage() != null) {
+        if (diet.getCarbsPercentage() != null) {
             sql.append("carbs_percentage = :carbsPercentage, ");
-            params.addValue("carbsPercentage", dietRecommendations.getCarbsPercentage());
+            params.addValue("carbsPercentage", diet.getCarbsPercentage());
         }
-        if (dietRecommendations.getFatPercentage() != null) {
+        if (diet.getFatPercentage() != null) {
             sql.append("fat_percentage = :fatPercentage, ");
-            params.addValue("fatPercentage", dietRecommendations.getFatPercentage());
+            params.addValue("fatPercentage", diet.getFatPercentage());
         }
-        if (dietRecommendations.getMealFrequency() != 0) {
-            sql.append("meal_frequency = :mealFrequency, ");
-            params.addValue("mealFrequency", dietRecommendations.getMealFrequency());
+        if (diet.getMealType() != null) {
+            sql.append("meal_type = :mealType, ");
+            params.addValue("mealFrequency", diet.getMealType());
         }
-        if (dietRecommendations.getHydrationRecommendation() != null) {
+        if (diet.getHydrationRecommendation() != null) {
             sql.append("hydration_recommendation = :hydrationRecommendation, ");
-            params.addValue("hydrationRecommendation", dietRecommendations.getHydrationRecommendation());
+            params.addValue("hydrationRecommendation", diet.getHydrationRecommendation());
         }
-        if (dietRecommendations.getFoodsToInclude() != null) {
+        if (diet.getFoodsToInclude() != null) {
             sql.append("foods_to_include = :foodsToInclude, ");
-            params.addValue("foodsToInclude", dietRecommendations.getFoodsToInclude());
+            params.addValue("foodsToInclude", diet.getFoodsToInclude());
         }
-        if (dietRecommendations.getFoodsToAvoid() != null) {
+        if (diet.getFoodsToAvoid() != null) {
             sql.append("foods_to_avoid = :foodsToAvoid, ");
-            params.addValue("foodsToAvoid", dietRecommendations.getFoodsToAvoid());
+            params.addValue("foodsToAvoid", diet.getFoodsToAvoid());
         }
-        if (dietRecommendations.getSupplementsRecommended() != null) {
+        if (diet.getSupplementsRecommended() != null) {
             sql.append("supplements_recommended = :supplementsRecommended, ");
-            params.addValue("supplementsRecommended", dietRecommendations.getSupplementsRecommended());
-        }
-        if (dietRecommendations.getCreatedAt() != null) {
-            sql.append("created_at = :createdAt, ");
-            params.addValue("createdAt", dietRecommendations.getCreatedAt());
-        }
-        if (dietRecommendations.getUpdatedAt() != null) {
-            sql.append("updated_at = :updatedAt, ");
-            params.addValue("updatedAt", dietRecommendations.getUpdatedAt());
+            params.addValue("supplementsRecommended", diet.getSupplementsRecommended());
         }
 
-        // Remove the last comma and space
-        sql.setLength(sql.length() - 2);
+        // Ensure at least one field is updated
+        if (params.getValues().isEmpty()) {
+            return 0; // No update needed
+        }
 
-        sql.append(" WHERE diet_id = :dietId");
-        params.addValue("dietId", dietRecommendations.getDietId());
+        sql.append("updated_at = CURRENT_TIMESTAMP WHERE diet_id = :dietId");
+        params.addValue("dietId", diet.getDietId());
 
-        NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-
-        return namedParameterJdbcTemplate.update(sql.toString(), params);
+        return namedJdbcTemplate.update(sql.toString(), params);
     }
 
     public int deleteById(int dietId) {
-        String sql = "DELETE FROM dietRecommendations WHERE diet_id = ?";
+        String sql = "DELETE FROM dietrecommendations WHERE diet_id = ?";
         return jdbcTemplate.update(sql, dietId);
     }
 }

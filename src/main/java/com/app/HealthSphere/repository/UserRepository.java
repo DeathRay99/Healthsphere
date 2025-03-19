@@ -82,22 +82,6 @@ public class UserRepository {
         StringBuilder sql = new StringBuilder("UPDATE Users SET ");
         Map<String, Object> params = new HashMap<>();
 
-        if (user.getFirstName() != null) {
-            sql.append("first_name = :firstName, ");
-            params.put("firstName", user.getFirstName());
-        }
-        if (user.getLastName() != null) {
-            sql.append("last_name = :lastName, ");
-            params.put("lastName", user.getLastName());
-        }
-        if (user.getDateOfBirth() != null) {
-            sql.append("date_of_birth = :dateOfBirth, ");
-            params.put("dateOfBirth", user.getDateOfBirth());
-        }
-        if (user.getGender() != null) {
-            sql.append("gender = :gender, ");
-            params.put("gender", user.getGender());
-        }
         if (user.getHeight() != null) {
             sql.append("height = :height, ");
             params.put("height", user.getHeight());
@@ -137,10 +121,6 @@ public class UserRepository {
         if (user.getDietaryPreference() != null) {
             sql.append("dietary_preference = :dietaryPreference, ");
             params.put("dietaryPreference", user.getDietaryPreference());
-        }
-        if (user.getAge() != null) { // Add age update condition
-            sql.append("age = :age, ");
-            params.put("age", user.getAge());
         }
 
         // If no fields were updated, return 0 (nothing changed)

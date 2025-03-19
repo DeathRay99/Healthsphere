@@ -11,6 +11,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -23,9 +25,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleUserNotFound(NoSuchElementException ex) {
+    public ResponseEntity<Map<String, String>> handleUserNotFound(NoSuchElementException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("err", "User not found. Please verify the User ID and try again.");
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("User not found. Please verify the User ID and try again.");
+                .body(errorResponse);
     }
 
 
@@ -66,8 +71,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFound(UserNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    public ResponseEntity<Map<String, String>> handleUserNotFound(UserNotFoundException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("err", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(errorResponse);
     }
 
 }

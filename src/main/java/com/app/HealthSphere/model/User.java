@@ -26,7 +26,7 @@ public class User {
 
     public User(Long userId, String firstName, String lastName, Date dateOfBirth, String gender, Double height, Double weight,
                 Double bmi, String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions,
-                String allergies, String medications, String dietaryPreference) {
+                String allergies, String medications, String dietaryPreference, int age) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -55,8 +55,8 @@ public class User {
 
 
 
-    public User(long userId, String firstName, String lastName, java.sql.Date dateOfBirth, String gender, double height, double weight, double bmi, String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions, String allergies, String medications, String dietaryPreference, int age) {
-    }
+//    public User(long userId, String firstName, String lastName, java.sql.Date dateOfBirth, String gender, double height, double weight, double bmi, String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions, String allergies, String medications, String dietaryPreference, int age) {
+//    }
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }

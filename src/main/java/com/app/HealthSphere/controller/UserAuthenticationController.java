@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@RequestMapping("api/auth")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class UserAuthenticationController {
 
     private final UserAuthenticationService authService;
@@ -22,14 +22,54 @@ public class UserAuthenticationController {
     }
 
     // Register a new user
+//    @PostMapping("/register")
+//    public ResponseEntity<String> register(@RequestBody UserAuthentication user) {
+//        boolean success = authService.register(user);
+//        if (success) {
+//            return ResponseEntity.ok("User registered successfully!");
+//        }
+//        return ResponseEntity.badRequest().body("Username already taken.");
+//    }
+
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserAuthentication user) {
-        boolean success = authService.register(user);
-        if (success) {
-            return ResponseEntity.ok("User registered successfully!");
+    public ResponseEntity<Map<String, Object>> register(@RequestBody UserAuthentication user, HttpSession session) {
+        // Check if email is already in use
+        if (authService.getUserByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already taken."));
         }
-        return ResponseEntity.badRequest().body("Username already taken.");
+
+        // Check if username is already taken
+        if (authService.getUserByUsername(user.getUsername()).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Username already taken."));
+        }
+
+        // Proceed with registration
+        boolean success = authService.register(user);
+
+        if (success) {
+            Optional<UserAuthentication> userOptional = authService.getUserByUsername(user.getUsername());
+
+            if (userOptional.isPresent()) {
+                UserAuthentication registeredUser = userOptional.get();
+
+                session.setAttribute("username", registeredUser.getUsername());
+                session.setAttribute("userId", registeredUser.getUserId());
+                session.setAttribute("role", registeredUser.getRole());
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("message", "User registered successfully!");
+                response.put("username", registeredUser.getUsername());
+                response.put("userId", registeredUser.getUserId());
+                response.put("role", registeredUser.getRole());
+
+                return ResponseEntity.ok(response);
+            }
+        }
+
+        return ResponseEntity.badRequest().body(Map.of("error", "Registration failed. Please try again."));
     }
+
+
 
     // Login user and create session
     @PostMapping("/login")

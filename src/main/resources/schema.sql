@@ -25,7 +25,6 @@ CREATE TABLE IF NOT EXISTS Users (
     medical_conditions TEXT, -- asthma, heart, knee, discomfort in any body part
     allergies TEXT,
     medications TEXT,
---    workout_intensity ENUM('light', 'heavy','intermediate'),
     dietary_preference ENUM('Vegetarian', 'Non-Vegetarian', 'Vegan'),
     age INT,
     FOREIGN KEY (user_id) REFERENCES UserAuthentication(user_id) ON DELETE CASCADE

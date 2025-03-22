@@ -1,14 +1,18 @@
+//
 //package com.app.HealthSphere.controller;
 //
 //import com.app.HealthSphere.model.Consultant;
 //import com.app.HealthSphere.service.ConsultantService;
 //import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.ResponseEntity;
 //import org.springframework.web.bind.annotation.*;
 //
 //import java.util.List;
 //
 //@RestController
-//@RequestMapping("/api/consultants")
+//@RequestMapping("api/consultants")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 //public class ConsultantController {
 //
 //    private final ConsultantService consultantService;
@@ -18,36 +22,43 @@
 //        this.consultantService = consultantService;
 //    }
 //
-//    // Create a new Consultant
+//    // ✅ Create a new Consultant
 //    @PostMapping
-//    public int createConsultant(@RequestBody Consultant consultant) {
-//        return consultantService.saveConsultant(consultant);
+//    public ResponseEntity<String> createConsultant(@RequestBody Consultant consultant) {
+//        int rowsAffected = consultantService.saveConsultant(consultant);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(rowsAffected + " Consultant created successfully.");
 //    }
 //
-//    // Retrieve a Consultant by ID
-//    @GetMapping("/{id}")
-//    public Consultant getConsultant(@PathVariable int id) {
-//        return consultantService.getConsultantById(id);
-//    }
-//
-//    // Retrieve all Consultants
+//    // ✅ Retrieve all Consultants
 //    @GetMapping
-//    public List<Consultant> getAllConsultants() {
-//        return consultantService.getAllConsultants();
+//    public ResponseEntity<List<Consultant>> getAllConsultants() {
+//        List<Consultant> consultants = consultantService.findAllConsultants();
+//        return ResponseEntity.ok(consultants);
 //    }
 //
-//    // Update an existing Consultant
-//    @PutMapping
-//    public int updateConsultant(@RequestBody Consultant consultant) {
-//        return consultantService.updateConsultant(consultant);
+//    // ✅ Retrieve a Consultant by ID
+//    @GetMapping("/{consultantId}")
+//    public ResponseEntity<Consultant> getConsultantById(@PathVariable int consultantId) {
+//        Consultant consultant = consultantService.findConsultantById(consultantId);
+//        return ResponseEntity.ok(consultant);
 //    }
 //
-//    // Delete a Consultant by ID
-//    @DeleteMapping("/{id}")
-//    public int deleteConsultant(@PathVariable int id) {
-//        return consultantService.deleteConsultant(id);
+//    // ✅ Update an existing Consultant
+//    @PutMapping("/{consultantId}")
+//    public ResponseEntity<String> updateConsultant(@PathVariable int consultantId, @RequestBody Consultant consultant) {
+//        consultant.setConsultantId(consultantId);
+//        int rowsAffected = consultantService.updateConsultant(consultant);
+//        return ResponseEntity.ok(rowsAffected + " Consultant updated successfully.");
+//    }
+//
+//    // ✅ Delete a Consultant by ID
+//    @DeleteMapping("/{consultantId}")
+//    public ResponseEntity<String> deleteConsultant(@PathVariable int consultantId) {
+//        int rowsAffected = consultantService.deleteConsultant(consultantId);
+//        return ResponseEntity.ok(rowsAffected + " Consultant deleted successfully.");
 //    }
 //}
+
 package com.app.HealthSphere.controller;
 
 import com.app.HealthSphere.model.Consultant;
@@ -71,38 +82,54 @@ public class ConsultantController {
         this.consultantService = consultantService;
     }
 
-    // ✅ Create a new Consultant
+    // Helper method to check if the user is an admin
+    private boolean isAdmin(String role) {
+        return "ADMIN".equalsIgnoreCase(role);
+    }
+
+    // ✅ Create a new Consultant (Admin-only)
     @PostMapping
-    public ResponseEntity<String> createConsultant(@RequestBody Consultant consultant) {
+    public ResponseEntity<String> createConsultant(@RequestBody Consultant consultant, @RequestHeader("Role") String role) {
+        if (!isAdmin(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied. Admins only.");
+        }
         int rowsAffected = consultantService.saveConsultant(consultant);
         return ResponseEntity.status(HttpStatus.CREATED).body(rowsAffected + " Consultant created successfully.");
     }
 
-    // ✅ Retrieve all Consultants
+    // ✅ Retrieve all Consultants (Accessible to all)
     @GetMapping
-    public ResponseEntity<List<Consultant>> getAllConsultants() {
+    public ResponseEntity<List<Consultant>> getAllConsultants(@RequestHeader("Role") String role) {
+        // No restriction for GET requests
         List<Consultant> consultants = consultantService.findAllConsultants();
         return ResponseEntity.ok(consultants);
     }
 
-    // ✅ Retrieve a Consultant by ID
+    // ✅ Retrieve a Consultant by ID (Accessible to all)
     @GetMapping("/{consultantId}")
-    public ResponseEntity<Consultant> getConsultantById(@PathVariable int consultantId) {
+    public ResponseEntity<Consultant> getConsultantById(@PathVariable int consultantId, @RequestHeader("Role") String role) {
+        // No restriction for GET requests
         Consultant consultant = consultantService.findConsultantById(consultantId);
         return ResponseEntity.ok(consultant);
     }
 
-    // ✅ Update an existing Consultant
+    // ✅ Update an existing Consultant (Admin-only)
     @PutMapping("/{consultantId}")
-    public ResponseEntity<String> updateConsultant(@PathVariable int consultantId, @RequestBody Consultant consultant) {
+    public ResponseEntity<String> updateConsultant(@PathVariable int consultantId, @RequestBody Consultant consultant, @RequestHeader("Role") String role) {
+        if (!isAdmin(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied. Admins only.");
+        }
         consultant.setConsultantId(consultantId);
         int rowsAffected = consultantService.updateConsultant(consultant);
         return ResponseEntity.ok(rowsAffected + " Consultant updated successfully.");
     }
 
-    // ✅ Delete a Consultant by ID
+    // ✅ Delete a Consultant by ID (Admin-only)
     @DeleteMapping("/{consultantId}")
-    public ResponseEntity<String> deleteConsultant(@PathVariable int consultantId) {
+    public ResponseEntity<String> deleteConsultant(@PathVariable int consultantId, @RequestHeader("Role") String role) {
+        if (!isAdmin(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied. Admins only.");
+        }
         int rowsAffected = consultantService.deleteConsultant(consultantId);
         return ResponseEntity.ok(rowsAffected + " Consultant deleted successfully.");
     }

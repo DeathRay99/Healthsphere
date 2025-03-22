@@ -8,16 +8,18 @@ public class FitnessGoal {
     private String goalType;
     private Double targetWeight;
     private Double targetBodyFat;
+    private Date startDate;  // Added this field
     private Date targetDate;
 
     public FitnessGoal() {}
 
-    public FitnessGoal(Long goalId,Long userId, String goalType, Double targetWeight, Double targetBodyFat, Date targetDate) {
-        this.goalId=goalId;
+    public FitnessGoal(Long goalId, Long userId, String goalType, Double targetWeight, Double targetBodyFat, Date startDate, Date targetDate) {
+        this.goalId = goalId;
         this.userId = userId;
         this.goalType = goalType;
         this.targetWeight = targetWeight;
         this.targetBodyFat = targetBodyFat;
+        this.startDate = startDate;  // Added this parameter
         this.targetDate = targetDate;
     }
 
@@ -35,6 +37,9 @@ public class FitnessGoal {
 
     public Double getTargetBodyFat() { return targetBodyFat; }
     public void setTargetBodyFat(Double targetBodyFat) { this.targetBodyFat = targetBodyFat; }
+
+    public Date getStartDate() { return startDate; }  // Added getter
+    public void setStartDate(Date startDate) { this.startDate = startDate; }  // Added setter
 
     public Date getTargetDate() { return targetDate; }
     public void setTargetDate(Date targetDate) { this.targetDate = targetDate; }

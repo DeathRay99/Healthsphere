@@ -61,14 +61,20 @@ public class WorkoutRecommendationsService {
 //        return savedIds;
 //    }
 
+    // Find workout recommendations by userId and goalId
+    public List<WorkoutRecommendations> findWorkoutsByUserAndGoalId(int userId, int goalId) {
+        return workoutRecommendationsRepository.findByUserAndGoalId(userId,goalId);
+
+    }
+
     // Find all workout recommendations
     public List<WorkoutRecommendations> findAllWorkoutRecommendations() {
         return workoutRecommendationsRepository.findAll();
     }
 
-    // Find workout recommendation by ID
-    public WorkoutRecommendations findWorkoutRecommendationById(int workoutId) {
-        return workoutRecommendationsRepository.findById(workoutId);
+    // Find workout recommendation by userID
+    public List<WorkoutRecommendations> findWorkoutRecommendationById(int userId) {
+        return workoutRecommendationsRepository.findById(userId);
     }
 
     // Update workout recommendation
@@ -129,7 +135,7 @@ public class WorkoutRecommendationsService {
         promptBuilder.append("- Gender: ").append(userProfile.get("gender")).append("\n");
         promptBuilder.append("- Age: ").append(userProfile.get("age")).append("\n");
         promptBuilder.append("- Height: ").append(userProfile.get("height")).append(" cm\n");
-        promptBuilder.append("- Weight: ").append(userProfile.get("weight")).append(" kg\n");
+        promptBuilder.append("- Current Weight: ").append(userProfile.get("weight")).append(" kg\n");
         promptBuilder.append("- BMI: ").append(userProfile.get("bmi")).append("\n");
         promptBuilder.append("- Medical Conditions: ").append(userProfile.get("medical_conditions")).append("\n\n");
 
@@ -149,7 +155,17 @@ public class WorkoutRecommendationsService {
         promptBuilder.append("Provide a structured response in JSON format as an array of four workout objects. Each workout should have these exact keys: ");
         promptBuilder.append("workout_name (string), workout_description (string), exercise_type (string) ENUM('Cardio', 'Strength', 'Flexibility', 'Balance', 'HIIT', 'Low Impact'), ");
         promptBuilder.append("duration_minutes (integer), calories_burned (integer), difficulty_level (string) ENUM('Beginner', 'Intermediate', 'Advanced'), ");
-        promptBuilder.append("frequency_per_week (integer), equipment_needed (string), video_url (string).\n\n");
+        promptBuilder.append("frequency_per_week (integer), equipment_needed (string), video_url (string) (youtube).\n\n");
+
+        promptBuilder.append("For video_url, only include links to widely known, popular workout channels and videos such as:");
+        promptBuilder.append("- Fitness Blender");
+        promptBuilder.append("- Athlean-X");
+        promptBuilder.append("- MadFit");
+        promptBuilder.append("- Yoga With Adriene");
+        promptBuilder.append("- Chloe Ting");
+        promptBuilder.append("- POPSUGAR Fitness\n\n");
+        promptBuilder.append("Use generic URLs that would be highly likely to exist, such as the channel homepage. Do not create specific video URLs unless they are extremely well-known series.\n\n");
+
         promptBuilder.append("Format your response as a valid JSON array enclosed in square brackets, containing exactly 4 workout objects. ");
         promptBuilder.append("For example: [{\"workout_name\": \"HIIT Cardio\", \"difficulty_level\": \"Beginner\", ...}, {\"workout_name\": \"Strength Training\", \"difficulty_level\": \"Intermediate\", ...}, ...]");
 

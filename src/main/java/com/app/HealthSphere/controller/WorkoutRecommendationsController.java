@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/workoutRecommendations")
+@RequestMapping("api/workoutRecommendations")
+@CrossOrigin(origins = "http://localhost:3000")
 public class WorkoutRecommendationsController {
 
     private final WorkoutRecommendationsService workoutRecommendationsService;
@@ -39,12 +40,22 @@ public class WorkoutRecommendationsController {
 //    }
 
     @PostMapping("/generate")
-    public ResponseEntity<List<WorkoutRecommendations>> generateWorkputRecommendation(
+    public ResponseEntity<List<WorkoutRecommendations>> generateWorkoutRecommendation(
             @RequestParam int userId,
             @RequestParam int goalId) {
 
         List<WorkoutRecommendations> generatedWorkouts = workoutRecommendationsService.generateMultipleWorkoutRecommendations(userId, goalId);
         return ResponseEntity.status(HttpStatus.CREATED).body(generatedWorkouts);
+    }
+
+    //get recommendations by user and goalid
+    @GetMapping("/get")
+    public ResponseEntity<List<WorkoutRecommendations>> getWorkoutRecommendation(
+            @RequestParam int userId,
+            @RequestParam int goalId) {
+
+        List<WorkoutRecommendations> workoutRecommendations = workoutRecommendationsService.findWorkoutsByUserAndGoalId(userId, goalId);
+        return ResponseEntity.status(HttpStatus.OK).body(workoutRecommendations);
     }
 
 
@@ -56,11 +67,11 @@ public class WorkoutRecommendationsController {
         return new ResponseEntity<>(workoutRecommendations, HttpStatus.OK);
     }
 
-    // Retrieve a workout recommendation by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<WorkoutRecommendations> getWorkoutRecommendationById(@PathVariable int id) {
-        WorkoutRecommendations workoutRecommendation = workoutRecommendationsService.findWorkoutRecommendationById(id);
-        return new ResponseEntity<>(workoutRecommendation, HttpStatus.OK);
+    // Retrieve a workout recommendation by userID
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<WorkoutRecommendations>> getWorkoutRecommendationById(@PathVariable int userId) {
+        List<WorkoutRecommendations> workoutRecommendations = workoutRecommendationsService.findWorkoutRecommendationById(userId);
+        return new ResponseEntity<>(workoutRecommendations, HttpStatus.OK);
     }
 
     // Update a workout recommendation

@@ -39,4 +39,9 @@ public class FitnessGoalService {
     public int deleteFitnessGoal(Long goalId) {
         return fitnessGoalRepository.delete(goalId);
     }
+
+    // Retrieve all fitness goals of a particular user
+    public List<FitnessGoal> findAllFitnessGoalsByUserId(Long userId) {
+        return fitnessGoalRepository.findByUserId(userId);
+    }
 }

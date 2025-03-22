@@ -33,12 +33,8 @@ public class User {
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
 
-        System.out.println("Before Assignment - Height: " + height + ", Weight: " + weight);
-
         this.height = height;
         this.weight = weight;
-
-        System.out.println("After Assignment - Height: " + this.height + ", Weight: " + this.weight);
 //        this.bmi = (bmi != null) ? bmi : calculateBMI(height, weight);
         this.phoneNumber = phoneNumber;
         this.address = address;
@@ -96,13 +92,11 @@ public class User {
 
     private Double calculateBMI(Double height, Double weight) {
         if (height == null || weight == null || height <= 0) {
-            System.out.println("BMI Calculation Skipped: Invalid height (" + height + ") or weight (" + weight + ")");
             return null;
         }
         double heightInMeters = height > 10 ? height / 100.0 : height;
 
         double bmi = weight / (heightInMeters * heightInMeters);
-        System.out.println("BMI Calculated: " + bmi); // Debug log
 
         return bmi;
     }
@@ -151,6 +145,5 @@ public class User {
         }
 
         this.age = age;
-        System.out.println("Age Calculated: " + age); // Debug log
     }
 }

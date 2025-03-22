@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/dietRecommendations")
+@RequestMapping("api/dietRecommendations")
+@CrossOrigin(origins = "http://localhost:3000")
 public class DietRecommendationsController {
 
     private final DietRecommendationsService dietRecommendationsService;
@@ -46,6 +47,24 @@ public class DietRecommendationsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(generatedDiets);
     }
 
+    //get recommendations by user and goalid
+    @GetMapping("/get")
+    public ResponseEntity<List<DietRecommendations>> getDietRecommendation(
+            @RequestParam int userId,
+            @RequestParam int goalId) {
+
+        List<DietRecommendations> dietRecommendations = dietRecommendationsService.findDietsByUserAndGoalId(userId, goalId);
+        return ResponseEntity.status(HttpStatus.OK).body(dietRecommendations);
+    }
+
+
+    //get all recommendations by userid
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<DietRecommendations>> getDietRecommendationById(@PathVariable int userId) {
+        List<DietRecommendations> dietRecommendations = dietRecommendationsService.findDietRecommendationById(userId);
+        return new ResponseEntity<>(dietRecommendations, HttpStatus.OK);
+    }
+
 
     // Retrieve all diet recommendations
     @GetMapping
@@ -55,11 +74,11 @@ public class DietRecommendationsController {
     }
 
     // Retrieve a diet recommendation by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<DietRecommendations> getDietRecommendationById(@PathVariable int id) {
-        DietRecommendations dietRecommendation = dietRecommendationsService.findDietRecommendationById(id);
-        return new ResponseEntity<>(dietRecommendation, HttpStatus.OK);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<DietRecommendations> getDietRecommendationById(@PathVariable int id) {
+//        DietRecommendations dietRecommendation = dietRecommendationsService.findDietRecommendationById(id);
+//        return new ResponseEntity<>(dietRecommendation, HttpStatus.OK);
+//    }
 
     // Update a diet recommendation
     @PutMapping("/{id}")

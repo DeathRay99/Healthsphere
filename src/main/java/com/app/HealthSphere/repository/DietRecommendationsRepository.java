@@ -45,9 +45,9 @@ public class DietRecommendationsRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public DietRecommendations findById(int dietId) {
-        String sql = "SELECT * FROM dietrecommendations WHERE diet_id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, dietId);
+    public List<DietRecommendations> findById(int userId) {
+        String sql = "SELECT * FROM dietrecommendations WHERE user_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, userId);
     }
 
     public int save(DietRecommendations diet) {
@@ -136,5 +136,10 @@ public class DietRecommendationsRepository {
     public int deleteById(int dietId) {
         String sql = "DELETE FROM dietrecommendations WHERE diet_id = ?";
         return jdbcTemplate.update(sql, dietId);
+    }
+
+    public List<DietRecommendations> findByUserAndGoalId(int userId, int goalId) {
+        String sql = "SELECT * FROM dietrecommendations WHERE user_id = ? and goal_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, userId, goalId);
     }
 }

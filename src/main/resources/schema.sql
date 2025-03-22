@@ -32,11 +32,14 @@ CREATE TABLE IF NOT EXISTS Users (
 
 CREATE TABLE IF NOT EXISTS FitnessGoals (
     goal_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT,
-    goal_type ENUM('Weight Loss', 'Muscle Gain', 'Maintain Weight', 'Endurance'),
+    user_id INT NOT NULL,
+    goal_type ENUM('Weight Loss', 'Muscle Gain', 'Maintain Weight', 'Endurance',
+                       'Flexibility', 'Strength', 'Speed', 'Balance', 'Cardio Fitness',
+                       'Sports Performance', 'Mental Wellness', 'Nutrition', 'Habit Formation') DEFAULT 'Weight Loss',
     target_weight DECIMAL(5,2),
     target_body_fat DECIMAL(4,2),
-    target_date DATE,
+    start_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    target_date DATE NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
@@ -78,7 +81,7 @@ CREATE TABLE IF NOT EXISTS WorkoutRecommendations (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (goal_id) REFERENCES FitnessGoals(goal_id) ON DELETE SET NULL
+    FOREIGN KEY (goal_id) REFERENCES FitnessGoals(goal_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS DietRecommendations (
@@ -113,3 +116,18 @@ CREATE TABLE IF NOT EXISTS Consultants (
     notes TEXT
 
 );
+
+--CREATE TABLE IF NOT EXISTS FitnessGoals (
+--    goal_id INT PRIMARY KEY AUTO_INCREMENT,
+--    user_id INT NOT NULL,
+--    goal_type ENUM('Weight Loss', 'Muscle Gain', 'Maintain Weight', 'Endurance') NOT NULL,
+--    target_weight DECIMAL(5,2),
+--    target_body_fat DECIMAL(4,2),
+--    target_date DATE NOT NULL,
+--    start_date DATE NOT NULL DEFAULT CURRENT_DATE,
+--    status ENUM('Active', 'Completed', 'Abandoned') NOT NULL DEFAULT 'Active',
+--    notes TEXT,
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
+--);

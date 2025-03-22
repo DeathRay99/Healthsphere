@@ -55,8 +55,8 @@ public class DietRecommendationsService {
     }
 
     // Find diet recommendation by ID
-    public DietRecommendations findDietRecommendationById(int dietId) {
-        return dietRecommendationsRepository.findById(dietId);
+    public List<DietRecommendations> findDietRecommendationById(int userId) {
+        return dietRecommendationsRepository.findById(userId);
     }
 
     // Update diet recommendation
@@ -437,5 +437,11 @@ public class DietRecommendationsService {
         return recommendations.isEmpty() ?
                 createFallbackMeal(userId, goalId, "breakfast") :
                 recommendations.get(0);
+    }
+
+    // Find diet recommendations by userId and goalId
+
+    public List<DietRecommendations> findDietsByUserAndGoalId(int userId, int goalId) {
+        return dietRecommendationsRepository.findByUserAndGoalId(userId,goalId);
     }
 }

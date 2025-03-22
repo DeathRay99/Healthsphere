@@ -38,9 +38,9 @@ public class WorkoutRecommendationsRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    public WorkoutRecommendations findById(int workoutId) {
-        String sql = "SELECT * FROM WorkoutRecommendations WHERE workout_id = ?";
-        return jdbcTemplate.queryForObject(sql, rowMapper, workoutId);
+    public List<WorkoutRecommendations> findById(int userId) {
+        String sql = "SELECT * FROM WorkoutRecommendations WHERE user_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, userId);
     }
 
     public int save(WorkoutRecommendations workoutRecommendations) {
@@ -85,5 +85,11 @@ public class WorkoutRecommendationsRepository {
     public int deleteById(int workoutId) {
         String sql = "DELETE FROM WorkoutRecommendations WHERE workout_id = ?";
         return jdbcTemplate.update(sql, workoutId);
+    }
+
+    public List<WorkoutRecommendations> findByUserAndGoalId(int userId, int goalId) {
+
+        String sql = "SELECT * FROM WorkoutRecommendations WHERE user_id = ? and goal_id = ?";
+        return jdbcTemplate.query(sql, rowMapper, userId,goalId);
     }
 }

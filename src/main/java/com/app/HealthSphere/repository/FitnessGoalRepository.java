@@ -24,19 +24,32 @@ public class FitnessGoalRepository {
                     rs.getString("goal_type"),
                     rs.getDouble("target_weight"),
                     rs.getDouble("target_body_fat"),
+                    rs.getDate("start_date"),  // Added this field
                     rs.getDate("target_date")
             );
 
     // Save a new fitness goal
     public int save(FitnessGoal goal) {
-        String sql = "INSERT INTO FitnessGoals (user_id, goal_type, target_weight, target_body_fat, target_date) VALUES (?, ?, ?, ?, ?)";
-        return jdbcTemplate.update(sql, goal.getUserId(), goal.getGoalType(), goal.getTargetWeight(), goal.getTargetBodyFat(), goal.getTargetDate());
+        String sql = "INSERT INTO FitnessGoals (user_id, goal_type, target_weight, target_body_fat, start_date, target_date) VALUES (?, ?, ?, ?, ?, ?) ";
+        return jdbcTemplate.update(sql,
+                goal.getUserId(),
+                goal.getGoalType(),
+                goal.getTargetWeight(),
+                goal.getTargetBodyFat(),
+                goal.getStartDate(),  // Added this field
+                goal.getTargetDate());
     }
 
     // Retrieve all fitness goals
     public List<FitnessGoal> findAll() {
         String sql = "SELECT * FROM FitnessGoals";
         return jdbcTemplate.query(sql, fitnessGoalRowMapper);
+    }
+
+    // Retrieve all fitness goals of a particular user
+    public List<FitnessGoal> findByUserId(Long userId) {
+        String sql = "SELECT * FROM FitnessGoals WHERE user_id = ?";
+        return jdbcTemplate.query(sql, fitnessGoalRowMapper, userId);
     }
 
     // Find a fitness goal by ID
@@ -47,8 +60,14 @@ public class FitnessGoalRepository {
 
     // Update an existing fitness goal
     public int update(FitnessGoal goal) {
-        String sql = "UPDATE FitnessGoals SET goal_type = ?, target_weight = ?, target_body_fat = ?, target_date = ? WHERE goal_id = ?";
-        return jdbcTemplate.update(sql, goal.getGoalType(), goal.getTargetWeight(), goal.getTargetBodyFat(), goal.getTargetDate(), goal.getGoalId());
+        String sql = "UPDATE FitnessGoals SET goal_type = ?, target_weight = ?, target_body_fat = ?, start_date = ?, target_date = ? WHERE goal_id = ?";
+        return jdbcTemplate.update(sql,
+                goal.getGoalType(),
+                goal.getTargetWeight(),
+                goal.getTargetBodyFat(),
+                goal.getStartDate(),  // Added this field
+                goal.getTargetDate(),
+                goal.getGoalId());
     }
 
     // Delete a fitness goal by ID
@@ -56,4 +75,6 @@ public class FitnessGoalRepository {
         String sql = "DELETE FROM FitnessGoals WHERE goal_id = ?";
         return jdbcTemplate.update(sql, goalId);
     }
+
+
 }

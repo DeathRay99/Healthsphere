@@ -60,7 +60,7 @@
 //}
 
 package com.app.HealthSphere.controller;
-
+import java.util.*;
 import com.app.HealthSphere.model.Consultant;
 import com.app.HealthSphere.service.ConsultantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +69,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/consultants")
@@ -89,12 +90,12 @@ public class ConsultantController {
 
     // ✅ Create a new Consultant (Admin-only)
     @PostMapping
-    public ResponseEntity<String> createConsultant(@RequestBody Consultant consultant, @RequestHeader("Role") String role) {
+    public ResponseEntity<Map<String, Object>> createConsultant(@RequestBody Consultant consultant, @RequestHeader("Role") String role) {
         if (!isAdmin(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied. Admins only.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("err", "Access denied, admins only."));
         }
-        int rowsAffected = consultantService.saveConsultant(consultant);
-        return ResponseEntity.status(HttpStatus.CREATED).body(rowsAffected + " Consultant created successfully.");
+        consultantService.saveConsultant(consultant);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of( "response", "Consultants added successfully"));
     }
 
     // ✅ Retrieve all Consultants (Accessible to all)
@@ -115,22 +116,22 @@ public class ConsultantController {
 
     // ✅ Update an existing Consultant (Admin-only)
     @PutMapping("/{consultantId}")
-    public ResponseEntity<String> updateConsultant(@PathVariable int consultantId, @RequestBody Consultant consultant, @RequestHeader("Role") String role) {
+    public ResponseEntity<Map<String, Object>> updateConsultant(@PathVariable int consultantId, @RequestBody Consultant consultant, @RequestHeader("Role") String role) {
         if (!isAdmin(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied. Admins only.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("err", "Access denied, admins only."));
         }
         consultant.setConsultantId(consultantId);
-        int rowsAffected = consultantService.updateConsultant(consultant);
-        return ResponseEntity.ok(rowsAffected + " Consultant updated successfully.");
+        consultantService.updateConsultant(consultant);
+        return ResponseEntity.ok(Map.of( "response", "Consultants updated successfully"));
     }
 
     // ✅ Delete a Consultant by ID (Admin-only)
     @DeleteMapping("/{consultantId}")
-    public ResponseEntity<String> deleteConsultant(@PathVariable int consultantId, @RequestHeader("Role") String role) {
+    public ResponseEntity<Map<String,Object>> deleteConsultant(@PathVariable int consultantId, @RequestHeader("Role") String role) {
         if (!isAdmin(role)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied. Admins only.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("err", "Access denied, admins only."));
         }
-        int rowsAffected = consultantService.deleteConsultant(consultantId);
-        return ResponseEntity.ok(rowsAffected + " Consultant deleted successfully.");
+        consultantService.deleteConsultant(consultantId);
+        return ResponseEntity.ok(Map.of( "response", "Consultants deleted successfully"));
     }
 }

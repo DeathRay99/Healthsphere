@@ -307,6 +307,90 @@
 //        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("err", "Access denied. You can only delete your own health logs."));
 //    }
 //}
+//package com.app.HealthSphere.controller;
+//
+//import com.app.HealthSphere.model.HealthLog;
+//import com.app.HealthSphere.service.HealthLogService;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.web.bind.annotation.*;
+//
+//import java.util.List;
+//import java.util.Map;
+//
+//@RestController
+//@CrossOrigin(origins = "http://localhost:3000")
+//@RequestMapping("/healthLogs")
+//public class HealthLogController {
+//
+//    private final HealthLogService healthLogService;
+//
+//    @Autowired
+//    public HealthLogController(HealthLogService healthLogService) {
+//        this.healthLogService = healthLogService;
+//    }
+//
+//    // ✅ Create a new health log
+//    @PostMapping
+//    public ResponseEntity<Map<String, Object>> createHealthLog(@RequestBody HealthLog healthLog) {
+//        healthLogService.saveHealthLog(healthLog);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("response", "Health log created successfully."));
+//    }
+//
+//    // ✅ Retrieve all health logs
+//    @GetMapping
+//    public ResponseEntity<List<HealthLog>> getAllHealthLogs() {
+//        List<HealthLog> healthLogs = healthLogService.findAllHealthLogs();
+//        return ResponseEntity.ok(healthLogs);
+//    }
+//
+//    // ✅ Retrieve a health log by ID
+////    @GetMapping("/{id}")
+////    public ResponseEntity<HealthLog> getHealthLogById(@PathVariable Long id) {
+////        HealthLog healthLog = healthLogService.findHealthLogById(id);
+////        return ResponseEntity.ok(healthLog);
+////    }
+//
+////    @GetMapping("/{id}")
+////    public ResponseEntity<Map<String, Object>> getHealthLogById(@PathVariable Long id) {
+////        HealthLog healthLog = healthLogService.findHealthLogById(id);
+////
+////        if (healthLog == null) {
+////            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No health logs found for the user."));
+////        }
+////
+////        return ResponseEntity.ok(Map.of("healthLog", healthLog));
+////    }
+//    @GetMapping("/{userId}")
+//    public ResponseEntity<Map<String, Object>> getHealthLogByUserId(@PathVariable Long userId) {
+//        List<HealthLog> healthLogs = healthLogService.findHealthLogsByUserId(userId);
+//
+//        if (healthLogs.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(Map.of("message", "No health logs found for the user."));
+//        }
+//
+//        return ResponseEntity.ok(Map.of("healthLogs", healthLogs));
+//    }
+//
+//
+//
+//    // ✅ Update a health log
+//    @PutMapping("/{id}")
+//    public ResponseEntity<Map<String, Object>> updateHealthLog(@PathVariable Long id, @RequestBody HealthLog healthLog) {
+//        healthLog.setLogId(id);
+//        healthLogService.updateHealthLog(healthLog);
+//        return ResponseEntity.ok(Map.of("response", "Health log updated successfully."));
+//    }
+//
+//    // ✅ Delete a health log by ID
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Map<String, Object>> deleteHealthLog(@PathVariable Long id) {
+//        healthLogService.deleteHealthLog(id);
+//        return ResponseEntity.ok(Map.of("response", "Health log deleted successfully."));
+//    }
+//}
 package com.app.HealthSphere.controller;
 
 import com.app.HealthSphere.model.HealthLog;
@@ -333,60 +417,85 @@ public class HealthLogController {
 
     // ✅ Create a new health log
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createHealthLog(@RequestBody HealthLog healthLog) {
+    public ResponseEntity<Map<String, Object>> createHealthLog(
+            @RequestBody HealthLog healthLog,
+            @RequestHeader("UserId") Long userId) {
+
+        if (userId == null || userId <= 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("err", "Invalid user ID. Health log must be associated with a valid user."));
+        }
+
+        healthLog.setUserId(userId); // Ensure health log is linked to the user
         healthLogService.saveHealthLog(healthLog);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("response", "Health log created successfully."));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("response", "Health log created successfully."));
     }
 
-    // ✅ Retrieve all health logs
+    // ✅ Retrieve all health logs (Admin-only)
     @GetMapping
-    public ResponseEntity<List<HealthLog>> getAllHealthLogs() {
+    public ResponseEntity<Map<String, Object>> getAllHealthLogs(@RequestHeader("Role") String role) {
+        if (!"ADMIN".equalsIgnoreCase(role)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("err", "Access denied. Admins only."));
+        }
         List<HealthLog> healthLogs = healthLogService.findAllHealthLogs();
-        return ResponseEntity.ok(healthLogs);
+        return ResponseEntity.ok(Map.of("healthLogs", healthLogs));
     }
 
-    // ✅ Retrieve a health log by ID
-//    @GetMapping("/{id}")
-//    public ResponseEntity<HealthLog> getHealthLogById(@PathVariable Long id) {
-//        HealthLog healthLog = healthLogService.findHealthLogById(id);
-//        return ResponseEntity.ok(healthLog);
-//    }
+    // ✅ Retrieve health logs by user ID (Role-based)
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Map<String, Object>> getHealthLogsByUserId(
+            @PathVariable Long userId,
+            @RequestHeader("Role") String role,
+            @RequestHeader("UserId") Long loggedInUserId) {
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Map<String, Object>> getHealthLogById(@PathVariable Long id) {
-//        HealthLog healthLog = healthLogService.findHealthLogById(id);
-//
-//        if (healthLog == null) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "No health logs found for the user."));
-//        }
-//
-//        return ResponseEntity.ok(Map.of("healthLog", healthLog));
-//    }
-    @GetMapping("/{userId}")
-    public ResponseEntity<Map<String, Object>> getHealthLogByUserId(@PathVariable Long userId) {
+        if (!"ADMIN".equalsIgnoreCase(role) && !userId.equals(loggedInUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("err", "Access denied. You can only view your own health logs."));
+        }
+
         List<HealthLog> healthLogs = healthLogService.findHealthLogsByUserId(userId);
 
         if (healthLogs.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("message", "No health logs found for the user."));
+                    .body(Map.of("message", "No health logs found for this user."));
         }
 
         return ResponseEntity.ok(Map.of("healthLogs", healthLogs));
     }
 
-
-
-    // ✅ Update a health log
+    // ✅ Update a health log (Role-based)
     @PutMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> updateHealthLog(@PathVariable Long id, @RequestBody HealthLog healthLog) {
+    public ResponseEntity<Map<String, Object>> updateHealthLog(
+            @PathVariable Long id,
+            @RequestBody HealthLog healthLog,
+            @RequestHeader("Role") String role,
+            @RequestHeader("UserId") Long loggedInUserId) {
+
+        if (!"ADMIN".equalsIgnoreCase(role) && !healthLog.getUserId().equals(loggedInUserId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("err", "Access denied. You can only update your own health logs."));
+        }
+
         healthLog.setLogId(id);
         healthLogService.updateHealthLog(healthLog);
         return ResponseEntity.ok(Map.of("response", "Health log updated successfully."));
     }
 
-    // ✅ Delete a health log by ID
+    // ✅ Delete a health log (Role-based)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> deleteHealthLog(@PathVariable Long id) {
+    public ResponseEntity<Map<String, Object>> deleteHealthLog(
+            @PathVariable Long id,
+            @RequestHeader("Role") String role,
+            @RequestHeader("UserId") Long loggedInUserId) {
+
+        HealthLog logToDelete = healthLogService.findHealthLogById(id);
+        if (logToDelete == null || (!"ADMIN".equalsIgnoreCase(role) && !logToDelete.getUserId().equals(loggedInUserId))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("err", "Access denied. You can only delete your own health logs."));
+        }
+
         healthLogService.deleteHealthLog(id);
         return ResponseEntity.ok(Map.of("response", "Health log deleted successfully."));
     }

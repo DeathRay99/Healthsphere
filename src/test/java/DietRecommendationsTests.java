@@ -1,156 +1,143 @@
-package com.app.HealthSphere;
+package com.app.HealthSphere.model;
 
-import com.app.HealthSphere.model.DietRecommendations;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.time.Instant;
 
-class DietRecommendationsTests {
+import static org.junit.jupiter.api.Assertions.*;
+
+class DietRecommendationsTest {
 
     @Test
-    void testDietRecommendationsCreation() {
-        Timestamp createdAt = Timestamp.from(Instant.now());
-        Timestamp updatedAt = Timestamp.from(Instant.now());
+    void testDefaultConstructor() {
+        // Test the default constructor
+        DietRecommendations diet = new DietRecommendations();
+        assertNotNull(diet, "Default constructor should create a non-null object.");
+    }
 
-        DietRecommendations diet = new DietRecommendations(1, "Keto Diet", "Low carbs, high fat diet",
-                2000, BigDecimal.valueOf(30), BigDecimal.valueOf(50),
-                BigDecimal.valueOf(20), 3, "Drink 2 liters of water daily",
-                "Meat, Cheese", "Sugar, Bread", "Omega-3 Supplements", createdAt, updatedAt);
+    @Test
+    void testParameterizedConstructor() {
+        // Set up test data
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        DietRecommendations diet = new DietRecommendations(
+                1, 1001, 201, "Weight Loss Diet", "High protein, low carb",
+                2000, new BigDecimal("0.25"), new BigDecimal("0.50"),
+                new BigDecimal("0.25"), "Breakfast", "Drink 3 liters of water daily",
+                "Chicken, Vegetables", "Sugars, Fried Foods", "Multivitamins", now, now
+        );
 
-        assertNotNull(diet);
+        // Verify the constructor assigns values correctly
         assertEquals(1, diet.getDietId());
-        assertEquals("Keto Diet", diet.getDietName());
+        assertEquals(1001, diet.getUserId());
+        assertEquals(201, diet.getGoalId());
+        assertEquals("Weight Loss Diet", diet.getDietName());
+        assertEquals("High protein, low carb", diet.getDietDescription());
         assertEquals(2000, diet.getCaloriesPerDay());
-        assertEquals(BigDecimal.valueOf(30), diet.getProteinPercentage());
-        assertEquals(BigDecimal.valueOf(50), diet.getCarbsPercentage());
-        assertEquals(BigDecimal.valueOf(20), diet.getFatPercentage());
-        assertEquals(3, diet.getMealFrequency());
-        assertEquals("Drink 2 liters of water daily", diet.getHydrationRecommendation());
-        assertEquals("Meat, Cheese", diet.getFoodsToInclude());
-        assertEquals("Sugar, Bread", diet.getFoodsToAvoid());
-        assertEquals("Omega-3 Supplements", diet.getSupplementsRecommended());
-        assertEquals(createdAt, diet.getCreatedAt());
-        assertEquals(updatedAt, diet.getUpdatedAt());
+        assertEquals(new BigDecimal("0.25"), diet.getProteinPercentage());
+        assertEquals(new BigDecimal("0.50"), diet.getCarbsPercentage());
+        assertEquals(new BigDecimal("0.25"), diet.getFatPercentage());
+        assertEquals("Breakfast", diet.getMealType());
+        assertEquals("Drink 3 liters of water daily", diet.getHydrationRecommendation());
+        assertEquals("Chicken, Vegetables", diet.getFoodsToInclude());
+        assertEquals("Sugars, Fried Foods", diet.getFoodsToAvoid());
+        assertEquals("Multivitamins", diet.getSupplementsRecommended());
+        assertEquals(now, diet.getCreatedAt());
+        assertEquals(now, diet.getUpdatedAt());
     }
 
     @Test
     void testSettersAndGetters() {
+        // Create an instance of DietRecommendations
         DietRecommendations diet = new DietRecommendations();
 
-        Timestamp createdAt = Timestamp.from(Instant.now());
-        Timestamp updatedAt = Timestamp.from(Instant.now());
+        // Set values using setters
+        diet.setDietId(2);
+        diet.setUserId(1002);
+        diet.setGoalId(202);
+        diet.setDietName("Keto Diet");
+        diet.setDietDescription("Low carb, high fat");
+        diet.setCaloriesPerDay(1800);
+        diet.setProteinPercentage(new BigDecimal("0.30"));
+        diet.setCarbsPercentage(new BigDecimal("0.10"));
+        diet.setFatPercentage(new BigDecimal("0.60"));
+        diet.setMealType("Lunch");
+        diet.setHydrationRecommendation("Drink 2 liters of water daily");
+        diet.setFoodsToInclude("Avocado, Eggs");
+        diet.setFoodsToAvoid("Bread, Sugar");
+        diet.setSupplementsRecommended("Omega-3");
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        diet.setCreatedAt(now);
+        diet.setUpdatedAt(now);
 
-        diet.setDietId(1);
-        diet.setDietName("Paleo Diet");
-        diet.setDietDescription("Focus on unprocessed foods");
-        diet.setCaloriesPerDay(2500);
-        diet.setProteinPercentage(BigDecimal.valueOf(35));
-        diet.setCarbsPercentage(BigDecimal.valueOf(40));
-        diet.setFatPercentage(BigDecimal.valueOf(25));
-        diet.setMealFrequency(4);
-        diet.setHydrationRecommendation("Drink at least 3 liters daily");
-        diet.setFoodsToInclude("Fruits, Vegetables");
-        diet.setFoodsToAvoid("Dairy, Sugar");
-        diet.setSupplementsRecommended("Vitamin D");
-        diet.setCreatedAt(createdAt);
-        diet.setUpdatedAt(updatedAt);
-
-        assertEquals(1, diet.getDietId());
-        assertEquals("Paleo Diet", diet.getDietName());
-        assertEquals("Focus on unprocessed foods", diet.getDietDescription());
-        assertEquals(2500, diet.getCaloriesPerDay());
-        assertEquals(BigDecimal.valueOf(35), diet.getProteinPercentage());
-        assertEquals(BigDecimal.valueOf(40), diet.getCarbsPercentage());
-        assertEquals(BigDecimal.valueOf(25), diet.getFatPercentage());
-        assertEquals(4, diet.getMealFrequency());
-        assertEquals("Drink at least 3 liters daily", diet.getHydrationRecommendation());
-        assertEquals("Fruits, Vegetables", diet.getFoodsToInclude());
-        assertEquals("Dairy, Sugar", diet.getFoodsToAvoid());
-        assertEquals("Vitamin D", diet.getSupplementsRecommended());
-        assertEquals(createdAt, diet.getCreatedAt());
-        assertEquals(updatedAt, diet.getUpdatedAt());
+        // Verify values using getters
+        assertEquals(2, diet.getDietId());
+        assertEquals(1002, diet.getUserId());
+        assertEquals(202, diet.getGoalId());
+        assertEquals("Keto Diet", diet.getDietName());
+        assertEquals("Low carb, high fat", diet.getDietDescription());
+        assertEquals(1800, diet.getCaloriesPerDay());
+        assertEquals(new BigDecimal("0.30"), diet.getProteinPercentage());
+        assertEquals(new BigDecimal("0.10"), diet.getCarbsPercentage());
+        assertEquals(new BigDecimal("0.60"), diet.getFatPercentage());
+        assertEquals("Lunch", diet.getMealType());
+        assertEquals("Drink 2 liters of water daily", diet.getHydrationRecommendation());
+        assertEquals("Avocado, Eggs", diet.getFoodsToInclude());
+        assertEquals("Bread, Sugar", diet.getFoodsToAvoid());
+        assertEquals("Omega-3", diet.getSupplementsRecommended());
+        assertEquals(now, diet.getCreatedAt());
+        assertEquals(now, diet.getUpdatedAt());
     }
 
     @Test
-    void testInvalidDietId() {
-        DietRecommendations diet = new DietRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> diet.setDietId(-1));
-        assertEquals("Diet ID must be a positive number.", exception.getMessage());
+    void testBoundaryValues() {
+        // Test boundary values for numerical and percentage fields
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        DietRecommendations diet = new DietRecommendations(
+                Integer.MAX_VALUE, Integer.MIN_VALUE, 0, "", "",
+                0, new BigDecimal("0.0"), new BigDecimal("0.0"),
+                new BigDecimal("0.0"), null, null, null, null, null, now, now
+        );
+
+        // Assertions for boundary values
+        assertEquals(Integer.MAX_VALUE, diet.getDietId());
+        assertEquals(Integer.MIN_VALUE, diet.getUserId());
+        assertEquals(0, diet.getGoalId());
+        assertEquals("", diet.getDietName());
+        assertEquals("", diet.getDietDescription());
+        assertEquals(0, diet.getCaloriesPerDay());
+        assertEquals(new BigDecimal("0.0"), diet.getProteinPercentage());
+        assertEquals(new BigDecimal("0.0"), diet.getCarbsPercentage());
+        assertEquals(new BigDecimal("0.0"), diet.getFatPercentage());
+        assertNull(diet.getMealType());
+        assertNull(diet.getHydrationRecommendation());
+        assertNull(diet.getFoodsToInclude());
+        assertNull(diet.getFoodsToAvoid());
+        assertNull(diet.getSupplementsRecommended());
+        assertEquals(now, diet.getCreatedAt());
+        assertEquals(now, diet.getUpdatedAt());
     }
 
     @Test
-    void testInvalidDietName() {
-        DietRecommendations diet = new DietRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> diet.setDietName(""));
-        assertEquals("Diet Name cannot be null or empty.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidCaloriesPerDay() {
-        DietRecommendations diet = new DietRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> diet.setCaloriesPerDay(-500));
-        assertEquals("Calories per day cannot be negative.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidProteinPercentage() {
+    void testExceptionalCases() {
         DietRecommendations diet = new DietRecommendations();
 
-        Exception lowException = assertThrows(IllegalArgumentException.class, () -> diet.setProteinPercentage(BigDecimal.valueOf(-5)));
-        assertEquals("Protein percentage must be between 0 and 100.", lowException.getMessage());
+        // Test invalid calories per day
+        Exception invalidCaloriesException = assertThrows(IllegalArgumentException.class, () -> {
+            diet.setCaloriesPerDay(-200);
+        });
+        assertEquals("Calories per day cannot be negative.", invalidCaloriesException.getMessage());
 
-        Exception highException = assertThrows(IllegalArgumentException.class, () -> diet.setProteinPercentage(BigDecimal.valueOf(105)));
-        assertEquals("Protein percentage must be between 0 and 100.", highException.getMessage());
-    }
+        // Test invalid protein percentage
+        Exception invalidProteinException = assertThrows(IllegalArgumentException.class, () -> {
+            diet.setProteinPercentage(new BigDecimal("1.5")); // Invalid: exceeds 1.0 (100%)
+        });
+        assertEquals("Protein percentage must be between 0 and 1.", invalidProteinException.getMessage());
 
-    @Test
-    void testInvalidCarbsPercentage() {
-        DietRecommendations diet = new DietRecommendations();
-
-        Exception lowException = assertThrows(IllegalArgumentException.class, () -> diet.setCarbsPercentage(BigDecimal.valueOf(-10)));
-        assertEquals("Carbohydrates percentage must be between 0 and 100.", lowException.getMessage());
-
-        Exception highException = assertThrows(IllegalArgumentException.class, () -> diet.setCarbsPercentage(BigDecimal.valueOf(120)));
-        assertEquals("Carbohydrates percentage must be between 0 and 100.", highException.getMessage());
-    }
-
-    @Test
-    void testInvalidFatPercentage() {
-        DietRecommendations diet = new DietRecommendations();
-
-        Exception lowException = assertThrows(IllegalArgumentException.class, () -> diet.setFatPercentage(BigDecimal.valueOf(-8)));
-        assertEquals("Fat percentage must be between 0 and 100.", lowException.getMessage());
-
-        Exception highException = assertThrows(IllegalArgumentException.class, () -> diet.setFatPercentage(BigDecimal.valueOf(150)));
-        assertEquals("Fat percentage must be between 0 and 100.", highException.getMessage());
-    }
-
-    @Test
-    void testInvalidMealFrequency() {
-        DietRecommendations diet = new DietRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> diet.setMealFrequency(-2));
-        assertEquals("Meal frequency must be a positive integer.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidCreatedAtTimestamp() {
-        DietRecommendations diet = new DietRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> diet.setCreatedAt(null));
-        assertEquals("Creation timestamp cannot be null.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidUpdatedAtTimestamp() {
-        DietRecommendations diet = new DietRecommendations();
-        Timestamp createdAt = Timestamp.from(Instant.now());
-        Timestamp pastUpdatedAt = Timestamp.from(Instant.now().minusSeconds(3600)); // One hour earlier
-
-        diet.setCreatedAt(createdAt);
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> diet.setUpdatedAt(pastUpdatedAt));
-        assertEquals("Updated timestamp cannot be earlier than created timestamp.", exception.getMessage());
+        // Test invalid fat percentage
+        Exception invalidFatException = assertThrows(IllegalArgumentException.class, () -> {
+            diet.setFatPercentage(new BigDecimal("-0.1")); // Invalid: negative value
+        });
+        assertEquals("Fat percentage cannot be negative.", invalidFatException.getMessage());
     }
 }

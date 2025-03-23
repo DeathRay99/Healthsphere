@@ -33,10 +33,10 @@ public class WorkoutRecommendations {
         this.workoutName = workoutName;
         this.workoutDescription = workoutDescription;
         this.exerciseType = exerciseType;
-        this.durationMinutes = durationMinutes;
-        this.caloriesBurned = caloriesBurned;
+        this.setDurationMinutes(durationMinutes); // Use setter for validation
+        this.setCaloriesBurned(caloriesBurned);   // Use setter for validation
         this.difficultyLevel = difficultyLevel;
-        this.frequencyPerWeek = frequencyPerWeek;
+        this.setFrequencyPerWeek(frequencyPerWeek); // Use setter for validation
         this.equipmentNeeded = equipmentNeeded;
         this.videoUrl = videoUrl;
         this.createdAt = createdAt;
@@ -97,6 +97,9 @@ public class WorkoutRecommendations {
     }
 
     public void setDurationMinutes(int durationMinutes) {
+        if (durationMinutes < 0) {
+            throw new IllegalArgumentException("Duration cannot be negative.");
+        }
         this.durationMinutes = durationMinutes;
     }
 
@@ -105,6 +108,9 @@ public class WorkoutRecommendations {
     }
 
     public void setCaloriesBurned(int caloriesBurned) {
+        if (caloriesBurned < 0) {
+            throw new IllegalArgumentException("Calories burned cannot be negative.");
+        }
         this.caloriesBurned = caloriesBurned;
     }
 
@@ -121,6 +127,9 @@ public class WorkoutRecommendations {
     }
 
     public void setFrequencyPerWeek(int frequencyPerWeek) {
+        if (frequencyPerWeek < 0) {
+            throw new IllegalArgumentException("Frequency per week cannot be negative.");
+        }
         this.frequencyPerWeek = frequencyPerWeek;
     }
 

@@ -36,10 +36,10 @@ public class DietRecommendations {
         this.goalId = goalId;
         this.dietName = dietName;
         this.dietDescription = dietDescription;
-        this.caloriesPerDay = caloriesPerDay;
-        this.proteinPercentage = proteinPercentage;
-        this.carbsPercentage = carbsPercentage;
-        this.fatPercentage = fatPercentage;
+        this.setCaloriesPerDay(caloriesPerDay); // Use setter to validate
+        this.setProteinPercentage(proteinPercentage); // Use setter to validate
+        this.setCarbsPercentage(carbsPercentage); // Use setter to validate
+        this.setFatPercentage(fatPercentage); // Use setter to validate
         this.mealType = mealType;
         this.hydrationRecommendation = hydrationRecommendation;
         this.foodsToInclude = foodsToInclude;
@@ -95,6 +95,9 @@ public class DietRecommendations {
     }
 
     public void setCaloriesPerDay(int caloriesPerDay) {
+        if (caloriesPerDay < 0) {
+            throw new IllegalArgumentException("Calories per day cannot be negative.");
+        }
         this.caloriesPerDay = caloriesPerDay;
     }
 
@@ -103,6 +106,9 @@ public class DietRecommendations {
     }
 
     public void setProteinPercentage(BigDecimal proteinPercentage) {
+        if (proteinPercentage == null || proteinPercentage.compareTo(BigDecimal.ZERO) < 0 || proteinPercentage.compareTo(BigDecimal.ONE) > 0) {
+            throw new IllegalArgumentException("Protein percentage must be between 0 and 1.");
+        }
         this.proteinPercentage = proteinPercentage;
     }
 
@@ -111,6 +117,9 @@ public class DietRecommendations {
     }
 
     public void setCarbsPercentage(BigDecimal carbsPercentage) {
+        if (carbsPercentage == null || carbsPercentage.compareTo(BigDecimal.ZERO) < 0 || carbsPercentage.compareTo(BigDecimal.ONE) > 0) {
+            throw new IllegalArgumentException("Carbs percentage must be between 0 and 1.");
+        }
         this.carbsPercentage = carbsPercentage;
     }
 
@@ -119,6 +128,15 @@ public class DietRecommendations {
     }
 
     public void setFatPercentage(BigDecimal fatPercentage) {
+        if (fatPercentage == null) {
+            throw new IllegalArgumentException("Fat percentage cannot be null.");
+        }
+        if (fatPercentage.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Fat percentage cannot be negative.");
+        }
+        if (fatPercentage.compareTo(BigDecimal.ONE) > 0) {
+            throw new IllegalArgumentException("Fat percentage cannot exceed 100%.");
+        }
         this.fatPercentage = fatPercentage;
     }
 

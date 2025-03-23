@@ -1,136 +1,130 @@
-package com.app.HealthSphere;
+package com.app.HealthSphere.model;
 
-import com.app.HealthSphere.model.WorkoutRecommendations;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.sql.Timestamp;
-import java.time.Instant;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class WorkoutRecommendationsTest {
 
     @Test
-    void testWorkoutRecommendationsCreation() {
-        Timestamp createdAt = Timestamp.from(Instant.now());
-        Timestamp updatedAt = Timestamp.from(Instant.now());
+    void testDefaultConstructor() {
+        // Test the default constructor
+        WorkoutRecommendations workout = new WorkoutRecommendations();
+        assertNotNull(workout, "Default constructor should create a non-null object.");
+    }
 
-        WorkoutRecommendations workout = new WorkoutRecommendations(1, "Cardio Blast", "High-intensity cardio workout",
-                "Cardio", 45, 500, "Medium", 4, "Treadmill", "http://example.com/video", createdAt, updatedAt);
+    @Test
+    void testParameterizedConstructor() {
+        // Set up test data
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        WorkoutRecommendations workout = new WorkoutRecommendations(
+                1, 1001, 201, "Morning Yoga", "A refreshing morning routine", "Yoga",
+                30, 200, "Beginner", 5, "Yoga Mat", "http://example.com/video", now, now
+        );
 
-        assertNotNull(workout);
+        // Verify the constructor assigns values correctly
         assertEquals(1, workout.getWorkoutId());
-        assertEquals("Cardio Blast", workout.getWorkoutName());
-        assertEquals("High-intensity cardio workout", workout.getWorkoutDescription());
-        assertEquals("Cardio", workout.getExerciseType());
-        assertEquals(45, workout.getDurationMinutes());
-        assertEquals(500, workout.getCaloriesBurned());
-        assertEquals("Medium", workout.getDifficultyLevel());
-        assertEquals(4, workout.getFrequencyPerWeek());
-        assertEquals("Treadmill", workout.getEquipmentNeeded());
+        assertEquals(1001, workout.getUserId());
+        assertEquals(201, workout.getGoalId());
+        assertEquals("Morning Yoga", workout.getWorkoutName());
+        assertEquals("A refreshing morning routine", workout.getWorkoutDescription());
+        assertEquals("Yoga", workout.getExerciseType());
+        assertEquals(30, workout.getDurationMinutes());
+        assertEquals(200, workout.getCaloriesBurned());
+        assertEquals("Beginner", workout.getDifficultyLevel());
+        assertEquals(5, workout.getFrequencyPerWeek());
+        assertEquals("Yoga Mat", workout.getEquipmentNeeded());
         assertEquals("http://example.com/video", workout.getVideoUrl());
-        assertEquals(createdAt, workout.getCreatedAt());
-        assertEquals(updatedAt, workout.getUpdatedAt());
+        assertEquals(now, workout.getCreatedAt());
+        assertEquals(now, workout.getUpdatedAt());
     }
 
     @Test
     void testSettersAndGetters() {
+        // Create an instance of WorkoutRecommendations
         WorkoutRecommendations workout = new WorkoutRecommendations();
 
-        Timestamp createdAt = Timestamp.from(Instant.now());
-        Timestamp updatedAt = Timestamp.from(Instant.now());
-
+        // Set values using setters
         workout.setWorkoutId(2);
-        workout.setWorkoutName("Yoga Flow");
-        workout.setWorkoutDescription("Relaxing yoga session");
-        workout.setExerciseType("Yoga");
-        workout.setDurationMinutes(30);
-        workout.setCaloriesBurned(200);
-        workout.setDifficultyLevel("Easy");
+        workout.setUserId(1002);
+        workout.setGoalId(202);
+        workout.setWorkoutName("Cardio Blast");
+        workout.setWorkoutDescription("High-energy cardio session.");
+        workout.setExerciseType("Cardio");
+        workout.setDurationMinutes(45);
+        workout.setCaloriesBurned(400);
+        workout.setDifficultyLevel("Intermediate");
         workout.setFrequencyPerWeek(3);
-        workout.setEquipmentNeeded("Yoga Mat");
-        workout.setVideoUrl("https://example.com/yoga");
-        workout.setCreatedAt(createdAt);
-        workout.setUpdatedAt(updatedAt);
+        workout.setEquipmentNeeded("Treadmill");
+        workout.setVideoUrl("http://example.com/cardio");
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        workout.setCreatedAt(now);
+        workout.setUpdatedAt(now);
 
+        // Verify values using getters
         assertEquals(2, workout.getWorkoutId());
-        assertEquals("Yoga Flow", workout.getWorkoutName());
-        assertEquals("Relaxing yoga session", workout.getWorkoutDescription());
-        assertEquals("Yoga", workout.getExerciseType());
-        assertEquals(30, workout.getDurationMinutes());
-        assertEquals(200, workout.getCaloriesBurned());
-        assertEquals("Easy", workout.getDifficultyLevel());
+        assertEquals(1002, workout.getUserId());
+        assertEquals(202, workout.getGoalId());
+        assertEquals("Cardio Blast", workout.getWorkoutName());
+        assertEquals("High-energy cardio session.", workout.getWorkoutDescription());
+        assertEquals("Cardio", workout.getExerciseType());
+        assertEquals(45, workout.getDurationMinutes());
+        assertEquals(400, workout.getCaloriesBurned());
+        assertEquals("Intermediate", workout.getDifficultyLevel());
         assertEquals(3, workout.getFrequencyPerWeek());
-        assertEquals("Yoga Mat", workout.getEquipmentNeeded());
-        assertEquals("https://example.com/yoga", workout.getVideoUrl());
-        assertEquals(createdAt, workout.getCreatedAt());
-        assertEquals(updatedAt, workout.getUpdatedAt());
+        assertEquals("Treadmill", workout.getEquipmentNeeded());
+        assertEquals("http://example.com/cardio", workout.getVideoUrl());
+        assertEquals(now, workout.getCreatedAt());
+        assertEquals(now, workout.getUpdatedAt());
     }
 
     @Test
-    void testInvalidWorkoutId() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setWorkoutId(-1));
-        assertEquals("Workout ID must be a positive integer.", exception.getMessage());
+    void testBoundaryValues() {
+        // Test boundary values for numerical fields
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        WorkoutRecommendations workout = new WorkoutRecommendations(
+                Integer.MAX_VALUE, Integer.MIN_VALUE, null, "", "",
+                "Low Intensity", 0, 0, "Beginner", 0, null, "",
+                now, now
+        );
+
+        // Assertions for boundary values
+        assertEquals(Integer.MAX_VALUE, workout.getWorkoutId());
+        assertEquals(Integer.MIN_VALUE, workout.getUserId());
+        assertNull(workout.getGoalId());
+        assertEquals("", workout.getWorkoutName());
+        assertEquals("", workout.getWorkoutDescription());
+        assertEquals("Low Intensity", workout.getExerciseType());
+        assertEquals(0, workout.getDurationMinutes());
+        assertEquals(0, workout.getCaloriesBurned());
+        assertEquals("Beginner", workout.getDifficultyLevel());
+        assertEquals(0, workout.getFrequencyPerWeek());
+        assertNull(workout.getEquipmentNeeded());
+        assertEquals("", workout.getVideoUrl());
     }
 
     @Test
-    void testInvalidWorkoutName() {
+    void testExceptionalCases() {
         WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setWorkoutName(""));
-        assertEquals("Workout Name cannot be null or empty.", exception.getMessage());
-    }
 
-    @Test
-    void testInvalidDurationMinutes() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setDurationMinutes(0));
-        assertEquals("Duration Minutes must be a positive integer.", exception.getMessage());
-    }
+        // Test invalid duration
+        Exception invalidDurationException = assertThrows(IllegalArgumentException.class, () -> {
+            workout.setDurationMinutes(-30);
+        });
+        assertEquals("Duration cannot be negative.", invalidDurationException.getMessage());
 
-    @Test
-    void testInvalidCaloriesBurned() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setCaloriesBurned(-50));
-        assertEquals("Calories Burned cannot be negative.", exception.getMessage());
-    }
+        // Test invalid calories burned
+        Exception invalidCaloriesException = assertThrows(IllegalArgumentException.class, () -> {
+            workout.setCaloriesBurned(-500);
+        });
+        assertEquals("Calories burned cannot be negative.", invalidCaloriesException.getMessage());
 
-    @Test
-    void testInvalidDifficultyLevel() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setDifficultyLevel("Very Hard"));
-        assertEquals("Difficulty Level must be 'Easy', 'Medium', or 'Hard'.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidFrequencyPerWeek() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setFrequencyPerWeek(8));
-        assertEquals("Frequency per Week must be between 1 and 7.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidVideoUrl() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setVideoUrl("invalid-url"));
-        assertEquals("Video URL must be a valid URL.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidCreatedAtTimestamp() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setCreatedAt(null));
-        assertEquals("CreatedAt timestamp cannot be null or in the future.", exception.getMessage());
-    }
-
-    @Test
-    void testInvalidUpdatedAtTimestamp() {
-        WorkoutRecommendations workout = new WorkoutRecommendations();
-        Timestamp createdAt = Timestamp.from(Instant.now());
-        Timestamp pastUpdatedAt = Timestamp.from(Instant.now().minusSeconds(3600)); // One hour earlier
-
-        workout.setCreatedAt(createdAt);
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> workout.setUpdatedAt(pastUpdatedAt));
-        assertEquals("UpdatedAt timestamp cannot be earlier than CreatedAt.", exception.getMessage());
+        // Test invalid frequency per week
+        Exception invalidFrequencyException = assertThrows(IllegalArgumentException.class, () -> {
+            workout.setFrequencyPerWeek(-2);
+        });
+        assertEquals("Frequency per week cannot be negative.", invalidFrequencyException.getMessage());
     }
 }

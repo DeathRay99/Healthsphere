@@ -100,7 +100,7 @@ public class ConsultantController {
 
     // ✅ Retrieve all Consultants (Accessible to all)
     @GetMapping
-    public ResponseEntity<List<Consultant>> getAllConsultants(@RequestHeader("Role") String role) {
+    public ResponseEntity<List<Consultant>> getAllConsultants() {
         // No restriction for GET requests
         List<Consultant> consultants = consultantService.findAllConsultants();
         return ResponseEntity.ok(consultants);

@@ -66,7 +66,7 @@ public class UserAuthenticationController {
             }
         }
 
-        return ResponseEntity.badRequest().body(Map.of("error", "Registration failed. Please try again."));
+        return ResponseEntity.badRequest().body(Map.of("err", "Registration failed. Please try again."));
     }
 
 
@@ -97,7 +97,7 @@ public class UserAuthenticationController {
             }
         }
 
-        return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
+        return ResponseEntity.badRequest().body(Map.of("err", "Invalid credentials"));
     }
 
 
@@ -124,7 +124,7 @@ public class UserAuthenticationController {
             ));
         }
 
-        return ResponseEntity.badRequest().body(Map.of("error", "No user is logged in."));
+        return ResponseEntity.badRequest().body(Map.of("err", "No user is logged in."));
     }
 }
 

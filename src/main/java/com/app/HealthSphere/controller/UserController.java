@@ -27,14 +27,14 @@ public class UserController {
         return "ADMIN".equalsIgnoreCase(role);
     }
 
-    // ✅ Create a user (User-only)
+    // complete a user profile (User-only)
     @PostMapping("/{userId}")
     public ResponseEntity<Map<String, Object>> createUser(@PathVariable Long userId, @RequestBody User user, @RequestHeader("Role") String role) {
         if (isAdmin(role)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("err", "Access denied. Users only."));
         }
         userService.saveUser(userId, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("response", "User created successfully."));
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("response", "User profile created successfully."));
     }
 
     // ✅ Retrieve all users (Admin-only)

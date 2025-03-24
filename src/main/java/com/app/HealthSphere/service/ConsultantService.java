@@ -1,48 +1,3 @@
-//package com.app.HealthSphere.service;
-//
-//import com.app.HealthSphere.model.Consultant;
-//import com.app.HealthSphere.repository.ConsultantRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Service;
-//
-//import java.util.List;
-//
-//@Service
-//public class ConsultantService {
-//    private final ConsultantRepository consultantRepository;
-//
-//    @Autowired
-//    public ConsultantService(ConsultantRepository consultantRepository) {
-//        this.consultantRepository = consultantRepository;
-//    }
-//
-//    // Create a new Consultant
-//    public int saveConsultant(int consultantId, Consultant consultant) {
-//        return consultantRepository.save(consultant);
-//    }
-//
-//    // Retrieve a Consultant by ID
-//    public Consultant getConsultantById(int consultantId) {
-//        return consultantRepository.findById(consultantId);
-//    }
-//
-//    // Retrieve all Consultants
-//    public List<Consultant> getAllConsultants() {
-//        return consultantRepository.findAll();
-//    }
-//
-//    // Update an existing Consultant
-//    public int updateConsultant(Consultant consultant) {
-//        return consultantRepository.update(consultant);
-//    }
-//
-//    // Delete a Consultant by ID
-//    public int deleteConsultant(int consultantId) {
-//        return consultantRepository.delete(consultantId);
-//    }
-//
-//
-//}
 package com.app.HealthSphere.service;
 
 import com.app.HealthSphere.model.Consultant;
@@ -50,6 +5,7 @@ import com.app.HealthSphere.repository.ConsultantRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ConsultantService {
@@ -60,31 +16,75 @@ public class ConsultantService {
         this.consultantRepository = consultantRepository;
     }
 
-    // Save a new Consultant
+    // ✅ Save a new Consultant
     public int saveConsultant(Consultant consultant) {
-        return consultantRepository.save(consultant);
+        if (consultant == null) {
+            throw new IllegalArgumentException("Consultant cannot be null.");
+        }
+        try {
+            return consultantRepository.save(consultant);
+        } catch (Exception e) {
+            throw new RuntimeException("Error saving consultant: " + e.getMessage());
+        }
     }
 
-    // Retrieve all Consultants
+    // ✅ Retrieve all Consultants
     public List<Consultant> findAllConsultants() {
-        return consultantRepository.findAll();
+        try {
+            List<Consultant> consultants = consultantRepository.findAll();
+            if (consultants.isEmpty()) {
+                throw new IllegalStateException("No consultants found.");
+            }
+            return consultants;
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving consultants: " + e.getMessage());
+        }
     }
 
-    // Find a Consultant by ID
+    // ✅ Find a Consultant by ID
     public Consultant findConsultantById(int consultantId) {
-        return consultantRepository.findById(consultantId);
+        try {
+            Optional<Consultant> consultant = Optional.ofNullable(consultantRepository.findById(consultantId));
+            if (consultant.isEmpty()) {
+                throw new IllegalArgumentException("Consultant with ID " + consultantId + " not found.");
+            }
+            return consultant.get();
+        } catch (Exception e) {
+            throw new RuntimeException("Error retrieving consultant by ID: " + e.getMessage());
+        }
     }
 
-    // Update an existing Consultant
-    public int updateConsultant(Consultant consultant) {
-        // Directly update the consultant
-        return consultantRepository.update(consultant);
+    // ✅ Update an existing Consultant
+    public boolean updateConsultant(Consultant consultant) {
+        if (consultant == null || consultant.getConsultantId() == 0) {
+            throw new IllegalArgumentException("Consultant data or ID cannot be null or zero.");
+        }
+
+        try {
+            int rowsUpdated = consultantRepository.update(consultant);
+            if (rowsUpdated == 0) {
+                throw new IllegalStateException("Failed to update consultant. Consultant with ID " + consultant.getConsultantId() + " does not exist.");
+            }
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating consultant: " + e.getMessage());
+        }
     }
 
-    // Delete a Consultant by ID
-    public int deleteConsultant(int consultantId) {
-        // Directly delete the consultant
-        return consultantRepository.delete(consultantId);
+    // ✅ Delete a Consultant by ID
+    public boolean deleteConsultant(int consultantId) {
+        if (consultantId <= 0) {
+            throw new IllegalArgumentException("Consultant ID must be greater than zero.");
+        }
+
+        try {
+            int rowsDeleted = consultantRepository.delete(consultantId);
+            if (rowsDeleted == 0) {
+                throw new IllegalStateException("Failed to delete consultant. Consultant with ID " + consultantId + " does not exist.");
+            }
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting consultant: " + e.getMessage());
+        }
     }
 }
-

@@ -416,21 +416,21 @@ public class HealthLogController {
     }
 
     // ✅ Create a new health log
+
     @PostMapping
-    public ResponseEntity<Map<String, Object>> createHealthLog(
-            @RequestBody HealthLog healthLog,
-            @RequestHeader("UserId") Long userId) {
-
-        if (userId == null || userId <= 0) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(Map.of("err", "Invalid user ID. Health log must be associated with a valid user."));
+    public ResponseEntity<Map<String, Object>> createHealthLog(@RequestBody HealthLog healthLog) {
+        try {
+            // Save the health log
+            healthLogService.saveHealthLog(healthLog);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("response", "Health log created successfully."));
+        } catch (Exception e) {
+            // Return an error in JSON format
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("err", "An unexpected error occurred while creating the health log."));
         }
-
-        healthLog.setUserId(userId); // Ensure health log is linked to the user
-        healthLogService.saveHealthLog(healthLog);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(Map.of("response", "Health log created successfully."));
     }
+
 
     // ✅ Retrieve all health logs (Admin-only)
     @GetMapping

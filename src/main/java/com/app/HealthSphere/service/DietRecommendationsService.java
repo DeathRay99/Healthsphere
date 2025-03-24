@@ -110,7 +110,7 @@ public class DietRecommendationsService {
         promptBuilder.append("- Gender: ").append(userProfile.get("gender")).append("\n");
         promptBuilder.append("- Age: ").append(userProfile.get("age")).append("\n");
         promptBuilder.append("- Height: ").append(userProfile.get("height")).append(" cm\n");
-        promptBuilder.append("- Weight: ").append(userProfile.get("weight")).append(" kg\n");
+        promptBuilder.append("- Current Weight: ").append(userProfile.get("weight")).append(" kg\n");
         promptBuilder.append("- BMI: ").append(userProfile.get("bmi")).append("\n");
         promptBuilder.append("- Dietary Preference: ").append(userProfile.get("dietary_preference")).append("\n");
         promptBuilder.append("- Allergies: ").append(userProfile.get("allergies")).append("\n");

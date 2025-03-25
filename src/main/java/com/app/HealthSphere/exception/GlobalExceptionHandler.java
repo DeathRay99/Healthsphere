@@ -19,9 +19,11 @@ import java.util.NoSuchElementException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<String> handleNoUsersFound(EmptyResultDataAccessException ex) {
+    public ResponseEntity<Map<String, Object>> handleNoUsersFound(EmptyResultDataAccessException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("err", "No users found. Please add users and try again.");
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body("No users found. Please add users and try again.");
+                .body(errorResponse);
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -35,39 +37,52 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<String> handleDatabaseConstraintViolation(DataIntegrityViolationException ex) {
+    public ResponseEntity<Map<String, Object>> handleDatabaseConstraintViolation(DataIntegrityViolationException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+
         if (ex.getRootCause() instanceof SQLIntegrityConstraintViolationException) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid operation. Please ensure the referenced data exists and the input values are unique.");
+            errorResponse.put("err", "Invalid operation. Please ensure the referenced data exists and the input values are unique.");
+        } else {
+            errorResponse.put("err", "Database error. Please check the input data and try again.");
         }
+
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Database error. Please check the input data and try again.");
+                .body(errorResponse);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleInvalidArgument(MethodArgumentTypeMismatchException ex) {
+    public ResponseEntity<Map<String, Object>> handleInvalidArgument(MethodArgumentTypeMismatchException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("err", "Invalid input: '" + ex.getName() + "' should be of type " +
+                (ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown") + ".");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Invalid input: '" + ex.getName() + "' should be of type " + ex.getRequiredType().getSimpleName() + ".");
+                .body(errorResponse);
     }
 
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleValidationErrors(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, Object>> handleValidationErrors(MethodArgumentNotValidException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("err", "Invalid request. Please check the required fields and try again.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Invalid request. Please check the required fields and try again.");
+                .body(errorResponse);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<String> handleMalformedJsonRequest(HttpMessageNotReadableException ex) {
+    public ResponseEntity<Map<String, Object>> handleMalformedJsonRequest(HttpMessageNotReadableException ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("err", "Invalid request format. Ensure the JSON structure is correct.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Invalid request format. Ensure the JSON structure is correct.");
+                .body(errorResponse);
     }
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(Exception ex) {
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("err", "An unexpected error occurred. Please contact support if the issue persists.");
+        errorResponse.put("details", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("An unexpected error occurred. Please contact support if the issue persists. "+ ex.getMessage());
+                .body(errorResponse);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

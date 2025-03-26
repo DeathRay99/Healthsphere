@@ -35,7 +35,6 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Map<String, Object>> handleDatabaseConstraintViolation(DataIntegrityViolationException ex) {
         Map<String, Object> errorResponse = new HashMap<>();

@@ -1,15 +1,15 @@
 package com.app.HealthSphere.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 public class UserAuthentication {
     private Long userId;
     private String username;
     private String email;
     private String passwordHash;
-    private String role; // Added role field
+    private String role;
     private LocalDateTime lastLogin;
     private LocalDateTime accountCreated;
     private Boolean isActive;
@@ -17,12 +17,25 @@ public class UserAuthentication {
     // Constructors
     public UserAuthentication() {}
 
-    public UserAuthentication(Long userId,String username, String email, String passwordHash,  @JsonProperty(defaultValue = "USER") String role) {
-        this.userId=userId;
+    public UserAuthentication(Long userId, String username, String email, String passwordHash, @JsonProperty(defaultValue = "USER") String role) {
+        if (username == null || username.length() < 3) {
+            throw new IllegalArgumentException("Username must be at least 3 characters long.");
+        }
+
+        String emailRegex = "^\\S+@\\S+\\.\\S+$";
+        if (email == null || !Pattern.matches(emailRegex, email)) {
+            throw new IllegalArgumentException("Invalid email format.");
+        }
+
+        if (passwordHash == null || passwordHash.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long.");
+        }
+
+        this.userId = userId;
         this.username = username;
         this.email = email;
         this.passwordHash = passwordHash;
-        this.role = role != null ? role : "USER"; // Default role is "USER"
+        this.role = role != null ? role : "USER";
         this.accountCreated = LocalDateTime.now();
         this.isActive = true;
     }
@@ -41,6 +54,9 @@ public class UserAuthentication {
     }
 
     public void setUsername(String username) {
+        if (username == null || username.length() < 3) {
+            throw new IllegalArgumentException("Username must be at least 3 characters long.");
+        }
         this.username = username;
     }
 
@@ -49,6 +65,10 @@ public class UserAuthentication {
     }
 
     public void setEmail(String email) {
+        String emailRegex = "^\\S+@\\S+\\.\\S+$";
+        if (email == null || !Pattern.matches(emailRegex, email)) {
+            throw new IllegalArgumentException("Invalid email format.");
+        }
         this.email = email;
     }
 
@@ -57,6 +77,9 @@ public class UserAuthentication {
     }
 
     public void setPasswordHash(String passwordHash) {
+        if (passwordHash == null || passwordHash.length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long.");
+        }
         this.passwordHash = passwordHash;
     }
 

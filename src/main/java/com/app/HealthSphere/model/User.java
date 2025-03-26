@@ -11,7 +11,7 @@ public class User {
     private String gender;
     private Double height;
     private Double weight;
-    private Double bmi; // Added BMI field
+    private Double bmi;
     private String phoneNumber;
     private String address;
     private String profilePictureUrl;
@@ -27,15 +27,24 @@ public class User {
     public User(Long userId, String firstName, String lastName, Date dateOfBirth, String gender, Double height, Double weight,
                 Double bmi, String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions,
                 String allergies, String medications, String dietaryPreference, int age) {
+
+        if (dateOfBirth != null && dateOfBirth.after(new Date())) {
+            throw new IllegalArgumentException("Date of Birth cannot be in the future.");
+        }
+        if (height != null && height <= 0) {
+            throw new IllegalArgumentException("Height must be a positive number.");
+        }
+        if (weight != null && weight <= 0) {
+            throw new IllegalArgumentException("Weight must be a positive number.");
+        }
+
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
-
         this.height = height;
         this.weight = weight;
-//        this.bmi = (bmi != null) ? bmi : calculateBMI(height, weight);
         this.phoneNumber = phoneNumber;
         this.address = address;
         this.profilePictureUrl = profilePictureUrl;
@@ -46,13 +55,8 @@ public class User {
         this.dietaryPreference = dietaryPreference;
 
         updateBMI();
-        calculateAge(); // Calculate age based on the date of birth
+        calculateAge();
     }
-
-
-
-//    public User(long userId, String firstName, String lastName, java.sql.Date dateOfBirth, String gender, double height, double weight, double bmi, String phoneNumber, String address, String profilePictureUrl, String bloodType, String medicalConditions, String allergies, String medications, String dietaryPreference, int age) {
-//    }
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
@@ -65,8 +69,11 @@ public class User {
 
     public Date getDateOfBirth() { return dateOfBirth; }
     public void setDateOfBirth(Date dateOfBirth) {
+        if (dateOfBirth != null && dateOfBirth.after(new Date())) {
+            throw new IllegalArgumentException("Date of Birth cannot be in the future.");
+        }
         this.dateOfBirth = dateOfBirth;
-        calculateAge(); // Recalculate age when date of birth changes
+        calculateAge();
     }
 
     public String getGender() { return gender; }
@@ -74,14 +81,20 @@ public class User {
 
     public Double getHeight() { return height; }
     public void setHeight(Double height) {
+        if (height != null && height <= 0) {
+            throw new IllegalArgumentException("Height must be a positive number.");
+        }
         this.height = height;
-        updateBMI(); // Update BMI when height changes
+        updateBMI();
     }
 
     public Double getWeight() { return weight; }
     public void setWeight(Double weight) {
+        if (weight != null && weight <= 0) {
+            throw new IllegalArgumentException("Weight must be a positive number.");
+        }
         this.weight = weight;
-        updateBMI(); // Update BMI when weight changes
+        updateBMI();
     }
 
     public Double getBmi() { return bmi; }
@@ -95,10 +108,7 @@ public class User {
             return null;
         }
         double heightInMeters = height > 10 ? height / 100.0 : height;
-
-        double bmi = weight / (heightInMeters * heightInMeters);
-
-        return bmi;
+        return weight / (heightInMeters * heightInMeters);
     }
 
     public String getPhoneNumber() { return phoneNumber; }

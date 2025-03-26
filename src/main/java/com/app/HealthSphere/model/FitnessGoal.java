@@ -8,18 +8,28 @@ public class FitnessGoal {
     private String goalType;
     private Double targetWeight;
     private Double targetBodyFat;
-    private Date startDate;  // Added this field
+    private Date startDate;
     private Date targetDate;
 
     public FitnessGoal() {}
 
     public FitnessGoal(Long goalId, Long userId, String goalType, Double targetWeight, Double targetBodyFat, Date startDate, Date targetDate) {
+        if (targetWeight == null || targetWeight <= 0) {
+            throw new IllegalArgumentException("Target weight must be greater than zero.");
+        }
+        if (targetBodyFat == null || targetBodyFat <= 0) {
+            throw new IllegalArgumentException("Target body fat percentage must be greater than zero.");
+        }
+        if (startDate != null && targetDate != null && targetDate.before(startDate)) {
+            throw new IllegalArgumentException("Target date cannot be before start date.");
+        }
+
         this.goalId = goalId;
         this.userId = userId;
         this.goalType = goalType;
         this.targetWeight = targetWeight;
         this.targetBodyFat = targetBodyFat;
-        this.startDate = startDate;  // Added this parameter
+        this.startDate = startDate;
         this.targetDate = targetDate;
     }
 
@@ -33,14 +43,29 @@ public class FitnessGoal {
     public void setGoalType(String goalType) { this.goalType = goalType; }
 
     public Double getTargetWeight() { return targetWeight; }
-    public void setTargetWeight(Double targetWeight) { this.targetWeight = targetWeight; }
+    public void setTargetWeight(Double targetWeight) {
+        if (targetWeight == null || targetWeight <= 0) {
+            throw new IllegalArgumentException("Target weight must be greater than zero.");
+        }
+        this.targetWeight = targetWeight;
+    }
 
     public Double getTargetBodyFat() { return targetBodyFat; }
-    public void setTargetBodyFat(Double targetBodyFat) { this.targetBodyFat = targetBodyFat; }
+    public void setTargetBodyFat(Double targetBodyFat) {
+        if (targetBodyFat == null || targetBodyFat <= 0) {
+            throw new IllegalArgumentException("Target body fat percentage must be greater than zero.");
+        }
+        this.targetBodyFat = targetBodyFat;
+    }
 
-    public Date getStartDate() { return startDate; }  // Added getter
-    public void setStartDate(Date startDate) { this.startDate = startDate; }  // Added setter
+    public Date getStartDate() { return startDate; }
+    public void setStartDate(Date startDate) { this.startDate = startDate; }
 
     public Date getTargetDate() { return targetDate; }
-    public void setTargetDate(Date targetDate) { this.targetDate = targetDate; }
+    public void setTargetDate(Date targetDate) {
+        if (startDate != null && targetDate != null && targetDate.before(startDate)) {
+            throw new IllegalArgumentException("Target date cannot be before start date.");
+        }
+        this.targetDate = targetDate;
+    }
 }

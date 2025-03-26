@@ -2,101 +2,129 @@ package com.app.HealthSphere;
 
 import com.app.HealthSphere.model.UserAuthentication;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.LocalDateTime;
 
-class UserAuthenticationTests {
+public class UserAuthenticationTest {
 
     @Test
-    void testUserAuthenticationCreation() {
-        try {
-            UserAuthentication userAuth = new UserAuthentication(1L, "john_doe", "john.doe@example.com", "hashed_password", "ADMIN");
+    public void testValidUserCreation() {
+        UserAuthentication user = new UserAuthentication(1L, "JohnDoe", "john.doe@example.com", "Password123!", "ADMIN");
+        assertEquals(1L, user.getUserId());
+        assertEquals("JohnDoe", user.getUsername());
+        assertEquals("john.doe@example.com", user.getEmail());
+        assertEquals("Password123!", user.getPasswordHash());
+        assertEquals("ADMIN", user.getRole());
+        assertTrue(user.getIsActive());
+        assertNotNull(user.getAccountCreated());
+    }
 
-            assertNotNull(userAuth);
-            assertEquals(1L, userAuth.getUserId());
-            assertEquals("john_doe", userAuth.getUsername());
-            assertEquals("john.doe@example.com", userAuth.getEmail());
-            assertEquals("hashed_password", userAuth.getPasswordHash());
-            assertEquals("ADMIN", userAuth.getRole());
-            assertTrue(userAuth.getIsActive());
-            assertNotNull(userAuth.getAccountCreated());
-        } catch (Exception e) {
-            fail("Exception occurred during testUserAuthenticationCreation: " + e.getMessage());
-        }
+
+    @Test
+    public void testDefaultRoleAsUser() {
+        UserAuthentication user = new UserAuthentication(2L, "JaneDoe", "jane.doe@example.com", "SecurePass123!", null);
+        assertEquals("USER", user.getRole());
+    }
+
+
+    @Test
+    public void testUsernameValidation() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new UserAuthentication(3L, "JD", "jd@example.com", "Password123!", "USER")
+        );
+        assertEquals("Username must be at least 3 characters long.", exception.getMessage());
+    }
+
+
+    @Test
+    public void testInvalidEmail() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new UserAuthentication(4L, "JohnDoe", "invalid-email", "Password123!", "USER")
+        );
+        assertEquals("Invalid email format.", exception.getMessage());
+    }
+
+
+    @Test
+    public void testPasswordValidation() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                new UserAuthentication(5L, "JohnDoe", "john.doe@example.com", "short", "USER")
+        );
+        assertEquals("Password must be at least 8 characters long.", exception.getMessage());
+    }
+
+
+    @Test
+    public void testSetUsernameValid() {
+        UserAuthentication user = new UserAuthentication(6L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        user.setUsername("NewUser123");
+        assertEquals("NewUser123", user.getUsername());
     }
 
     @Test
-    void testSettersAndGetters() {
-        try {
-            UserAuthentication userAuth = new UserAuthentication();
+    public void testSetUsernameInvalid() {
+        UserAuthentication user = new UserAuthentication(7L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                user.setUsername("JD")
+        );
+        assertEquals("Username must be at least 3 characters long.", exception.getMessage());
+    }
 
-            userAuth.setUserId(2L);
-            userAuth.setUsername("jane_doe");
-            userAuth.setEmail("jane.doe@example.com");
-            userAuth.setPasswordHash("securepassword");
-            userAuth.setRole("USER");
-            userAuth.setLastLogin(LocalDateTime.now().minusDays(1));
-            userAuth.setAccountCreated(LocalDateTime.now().minusDays(30));
-            userAuth.setIsActive(false);
 
-            assertEquals(2L, userAuth.getUserId());
-            assertEquals("jane_doe", userAuth.getUsername());
-            assertEquals("jane.doe@example.com", userAuth.getEmail());
-            assertEquals("securepassword", userAuth.getPasswordHash());
-            assertEquals("USER", userAuth.getRole());
-            assertFalse(userAuth.getIsActive());
-        } catch (Exception e) {
-            fail("Exception occurred during testSettersAndGetters: " + e.getMessage());
-        }
+    @Test
+    public void testSetEmailValid() {
+        UserAuthentication user = new UserAuthentication(8L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        user.setEmail("new.email@example.com");
+        assertEquals("new.email@example.com", user.getEmail());
     }
 
     @Test
-    void testInvalidUserId() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UserAuthentication userAuth = new UserAuthentication();
-            userAuth.setUserId(-1L);
-        });
+    public void testSetEmailInvalid() {
+        UserAuthentication user = new UserAuthentication(9L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                user.setEmail("invalid-email")
+        );
+        assertEquals("Invalid email format.", exception.getMessage());
+    }
+
+
+    @Test
+    public void testSetPasswordValid() {
+        UserAuthentication user = new UserAuthentication(10L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        user.setPasswordHash("NewStrongPass123!");
+        assertEquals("NewStrongPass123!", user.getPasswordHash());
     }
 
     @Test
-    void testInvalidUsername() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UserAuthentication userAuth = new UserAuthentication();
-            userAuth.setUsername("");
-        });
+    public void testSetPasswordInvalid() {
+        UserAuthentication user = new UserAuthentication(11L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                user.setPasswordHash("short")
+        );
+        assertEquals("Password must be at least 8 characters long.", exception.getMessage());
     }
 
-    @Test
-    void testInvalidEmail() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UserAuthentication userAuth = new UserAuthentication();
-            userAuth.setEmail("invalid-email");
-        });
-    }
 
     @Test
-    void testInvalidPasswordHash() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UserAuthentication userAuth = new UserAuthentication();
-            userAuth.setPasswordHash("short");
-        });
+    public void testSetLastLogin() {
+        UserAuthentication user = new UserAuthentication(12L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        LocalDateTime loginTime = LocalDateTime.now();
+        user.setLastLogin(loginTime);
+        assertEquals(loginTime, user.getLastLogin());
     }
 
-    @Test
-    void testInvalidRole() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UserAuthentication userAuth = new UserAuthentication();
-            userAuth.setRole("GUEST");
-        });
-    }
 
     @Test
-    void testInvalidLastLogin() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            UserAuthentication userAuth = new UserAuthentication();
-            userAuth.setLastLogin(LocalDateTime.now().plusDays(1));
-        });
+    public void testAccountCreatedDate() {
+        UserAuthentication user = new UserAuthentication(13L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        assertNotNull(user.getAccountCreated());
+    }
+
+
+    @Test
+    public void testSetIsActive() {
+        UserAuthentication user = new UserAuthentication(14L, "JohnDoe", "john.doe@example.com", "Password123!", "USER");
+        user.setIsActive(false);
+        assertFalse(user.getIsActive());
     }
 }

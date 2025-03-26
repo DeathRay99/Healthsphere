@@ -66,20 +66,19 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<Map<String, Object>> handleMalformedJsonRequest(HttpMessageNotReadableException ex) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("err", "Invalid request format. Ensure the JSON structure is correct.");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(errorResponse);
-    }
+//    @ExceptionHandler(HttpMessageNotReadableException.class)
+//    public ResponseEntity<Map<String, Object>> handleMalformedJsonRequest(HttpMessageNotReadableException ex) {
+//        Map<String, Object> errorResponse = new HashMap<>();
+//        errorResponse.put("err", "Invalid request format. Ensure the JSON structure is correct.");
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                .body(errorResponse);
+//    }
 
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("err", "An unexpected error occurred. Please contact support if the issue persists.");
-        errorResponse.put("details", ex.getMessage());
+        errorResponse.put("err", "An unexpected error occurred. Details: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(errorResponse);
     }
